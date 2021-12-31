@@ -20,20 +20,26 @@ python tools/test.py ${CONFIG_FILE} ${CHECKPOINT_FILE} [optional arguments] --la
 
 Examples:
 
-For classification, inference Baseline on CUB under 5way 1shot setting.
-
+Inference rotated RetinaNet on DOTA-1.0 dataset. (Please change the [data_root](../configs/_base_/datasets/dota1_0.py) firstly.)
 ```shell
-python ./tools/classification/test.py \
-  configs/classification/baseline/cub/baseline_conv4_1xb64_cub_5way-1shot.py \
-  checkpoints/SOME_CHECKPOINT.pth
+python ./tools/test.py \
+  configs/rretinanet/rretinanet_obb_r50_fpn_1x_dota_v3.py \
+  checkpoints/SOME_CHECKPOINT.pth --eval mAP
 ```
 
-For detection, inference TFA on VOC split1 1shot setting.
-
+You can also visualize the results.
 ```shell
-python ./tools/detection/test.py \
-  configs/detection/tfa/voc/split1/tfa_r101_fpn_voc-split1_1shot-fine-tuning.py \
-  checkpoints/SOME_CHECKPOINT.pth --eval mAP
+python ./tools/test.py \
+  configs/rretinanet/rretinanet_obb_r50_fpn_1x_dota_v3.py \
+  checkpoints/SOME_CHECKPOINT.pth \
+  --show-dir work_dirs/vis
+```
+Further, you can also generate compressed files for online submission.
+```shell
+python ./tools/test.py  \
+  configs/rretinanet/rretinanet_obb_r50_fpn_1x_dota_v3.py \
+  checkpoints/SOME_CHECKPOINT.pth 1 --format-only \
+  --eval-options submission_dir=work_dirs/Task1_results
 ```
 
 ## Train a model
@@ -64,13 +70,11 @@ Difference between `resume-from` and `load-from`:
 
 ### Train with multiple machines
 
-If you run MMClassification on a cluster managed with [slurm](https://slurm.schedmd.com/), you can use the script `slurm_train.sh`. (This script also supports single machine training.)
+If you run MMRotate on a cluster managed with [slurm](https://slurm.schedmd.com/), you can use the script `slurm_train.sh`. (This script also supports single machine training.)
 
 ```shell
 [GPUS=${GPUS}] ./tools/slurm_train.sh ${PARTITION} ${JOB_NAME} ${CONFIG_FILE} ${WORK_DIR}
 ```
-
-You can check [slurm_train.sh](https://github.com/open-mmlab/mmclassification/blob/master/tools/slurm_train.sh) for full arguments and environment variables.
 
 If you have just multiple machines connected with ethernet, you can refer to
 PyTorch [launch utility](https://pytorch.org/docs/stable/distributed_deprecated.html#launch-utility).

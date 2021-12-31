@@ -19,10 +19,10 @@ sys.path.insert(0, os.path.abspath('../..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'mmfewshot'
-copyright = '2018-2021, OpenMMLab'
-author = 'MMFewShot Author'
-version_file = '../../mmfewshot/version.py'
+project = 'mmrotate'
+copyright = '2018-2022, OpenMMLab'
+author = 'MMRotate Author'
+version_file = '../../mmrotate/version.py'
 
 
 def get_version():
@@ -46,7 +46,7 @@ extensions = [
     'sphinx_markdown_tables',
 ]
 
-autodoc_mock_imports = ['matplotlib', 'mmfewshot.version', 'mmcv.ops']
+autodoc_mock_imports = ['matplotlib', 'mmrotate.version', 'mmcv.ops']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -82,7 +82,7 @@ html_theme_options = {
     'menu': [
         {
             'name': 'GitHub',
-            'url': 'https://github.com/open-mmlab/mmfewshot'
+            'url': 'https://github.com/open-mmlab/mmrotate'
         },
         {
             'name':
@@ -92,12 +92,6 @@ html_theme_options = {
                     'name': 'MMCV',
                     'url': 'https://github.com/open-mmlab/mmcv',
                     'description': 'Foundational library for computer vision'
-                },
-                {
-                    'name': 'MMClassification',
-                    'url':
-                    'https://mmclassification.readthedocs.io/en/latest/',
-                    'description': 'Image classification toolbox and benchmark'
                 },
                 {
                     'name': 'MMDetection',

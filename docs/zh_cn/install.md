@@ -2,19 +2,18 @@
 
 - Linux (Windows 目前尚不支持)
 - Python 3.7+
-- PyTorch 1.5+
+- PyTorch 1.6+
 - CUDA 9.2+
 - GCC 5+
 - [mmcv](https://mmcv.readthedocs.io/en/latest/#installation) 1.3.12+
 - [mmdet](https://mmdetection.readthedocs.io/en/latest/#installation) 2.16.0+
-- [mmcls](https://mmclassification.readthedocs.io/en/latest/#installation) 0.15.0+
 
 
-MMFewShot 和 MMCV, MMCls, MMDet 版本兼容性如下所示，需要安装正确的版本以避免安装出现问题。
+MMRotate 和 MMCV, MMDet 版本兼容性如下所示，需要安装正确的版本以避免安装出现问题。
 
-| MMFewShot 版本   |    MMCV 版本   |      MMClassification 版本     |      MMDetection 版本     |
-|:-------------------:|:-----------------:|:---------------------------------:|:----------------------------:|
-| master              | mmcv-full>=1.3.12 |      mmdet >= 2.16.0              |      mmcls >=0.15.0          |
+| MMRotate 版本   |    MMCV 版本   |      MMClassification 版本     |
+|:-------------------:|:-----------------:|:---------------------------------:|
+| master              | mmcv-full>=1.4.? |      mmdet >= 2.19.0               |
 
 **注意：**如果已经安装了 mmcv，首先需要使用 `pip uninstall mmcv` 卸载已安装的 mmcv，如果同时安装了 mmcv 和 mmcv-full，将会报 `ModuleNotFoundError` 错误。
 
@@ -44,18 +43,18 @@ MMFewShot 和 MMCV, MMCls, MMDet 版本兼容性如下所示，需要安装正�
     ```
 
 
-### 安装 MMFewShot
+### 安装 MMRotate
 
-我们建议使用 [MIM](https://github.com/open-mmlab/mim) 来安装 MMFewShot：
+我们建议使用 [MIM](https://github.com/open-mmlab/mim) 来安装 MMRotate：
 
 ``` shell
 pip install openmim
-mim install mmfewshot
+mim install mmrotate
 ```
 MIM 能够自动地安装 OpenMMLab 的项目以及对应的依赖包。
 
 
-或者，可以手动安装 MMFewShot：
+或者，可以手动安装 MMRotate：
 
 1. 安装 mmcv-full，我们建议使用预构建包来安装：
 
@@ -84,27 +83,27 @@ MIM 能够自动地安装 OpenMMLab 的项目以及对应的依赖包。
     pip install mmcv-full
     ```
 
-2. 安装 MMClassification 和 MMDetection.
+2. 安装 MMDetection.
 
-    你可以直接通过如下命令从 pip 安装使用 mmclassification 和 mmdetection：
+    你可以直接通过如下命令从 pip 安装使用 mmdetection：
 
     ```shell
-    pip install mmcls mmdet
+    pip install mmdet
     ```
 
-3. 安装 MMFewShot.
+3. 安装 MMRotate.
 
-    你可以直接通过如下命令从 pip 安装使用 mmfewshot：
+    你可以直接通过如下命令从 pip 安装使用 mmrotate：
 
     ```shell
-    pip install mmfewshot
+    pip install mmrotate
     ```
 
     或者从 git 仓库编译源码：
 
     ```shell
-    git clone https://github.com/open-mmlab/mmfewshot.git
-    cd mmfewshot
+    git clone https://github.com/open-mmlab/mmrotate.git
+    cd mmrotate
     pip install -r requirements/build.txt
     pip install -v -e .  # or "python setup.py develop"
 
@@ -119,17 +118,17 @@ MIM 能够自动地安装 OpenMMLab 的项目以及对应的依赖包。
 
 ### 另一种选择： Docker 镜像
 
-我们提供了 [Dockerfile](https://github.com/open-mmlab/mmfewshot/blob/master/docker/Dockerfile) to build an image. Ensure that you are using [docker version](https://docs.docker.com/engine/install/) >=19.03.
+我们提供了 [Dockerfile](https://github.com/open-mmlab/mmrotate/blob/master/docker/Dockerfile) to build an image. Ensure that you are using [docker version](https://docs.docker.com/engine/install/) >=19.03.
 
 ```shell
 # 基于 PyTorch 1.6, CUDA 10.1 生成镜像
-docker build -t mmfewshot docker/
+docker build -t mmrotate docker/
 ```
 
 运行命令：
 
 ```shell
-docker run --gpus all --shm-size=8g -it -v {DATA_DIR}:/mmfewshot/data mmfewshot
+docker run --gpus all --shm-size=8g -it -v {DATA_DIR}:/mmrotate/data mmrotate
 ```
 
 ### 从零开始设置脚本
@@ -145,12 +144,12 @@ conda install pytorch==1.7.0 torchvision==0.8.0 torchaudio==0.7.0 cudatoolkit=10
 # 安装最新版本的 mmcv
 pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu101/torch1.7.0/index.html
 
-# 安装 mmclassification mmdetection
-pip install mmcls mmdet
+# 安装 mmdetection
+pip install mmdet
 
-# 安装 mmfewshot
-git clone https://github.com/open-mmlab/mmfewshot.git
-cd mmfewshot
+# 安装 mmrotate
+git clone https://github.com/open-mmlab/mmrotate.git
+cd mmrotate
 pip install -r requirements/build.txt
 pip install -v -e .  # or "python setup.py develop"
 ```
@@ -158,11 +157,10 @@ pip install -v -e .  # or "python setup.py develop"
 
 ## 验证
 
-为了验证是否正确安装了 MMFewShot 和所需的环境，我们可以运行示例的 Python 代码在示例图像进行推理：
+为了验证是否正确安装了 MMRotate 和所需的环境，我们可以运行示例的 Python 代码在示例图像进行推理：
 
-具体的细节可以参考 [few shot classification demo](https://github.com/open-mmlab/mmfewshot/tree/main/demo#few-shot-classification-demo)
-以及 [few shot detection demo](https://github.com/open-mmlab/mmfewshot/tree/main/demo#few-shot-detection-demo) 。
-如果成功安装 MMFewShot，则上面的代码可以完整地运行。
+具体的细节可以参考 [demo](https://github.com/open-mmlab/mmrotate/tree/main/demo)。
+如果成功安装 MMRotate，则上面的代码可以完整地运行。
 
 ## 准备数据集
-具体的细节可以参考 [准备数据](https://github.com/open-mmlab/mmfewshot/tree/main/tools/data) 下载并组织数据集。
+具体的细节可以参考 [准备数据](https://github.com/open-mmlab/mmrotate/tree/main/tools/data) 下载并组织数据集。

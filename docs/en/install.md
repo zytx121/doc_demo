@@ -2,19 +2,18 @@
 
 - Linux (Windows is not officially supported)
 - Python 3.7+
-- PyTorch 1.5+
+- PyTorch 1.6+
 - CUDA 9.2+
 - GCC 5+
-- [mmcv](https://mmcv.readthedocs.io/en/latest/get_started/installation.html) 1.3.12+
-- [mmdet](https://mmdetection.readthedocs.io/en/latest/get_started.html#installation) 2.16.0+
-- [mmcls](https://mmclassification.readthedocs.io/en/latest/install.html) 0.15.0+
+- [mmcv](https://mmcv.readthedocs.io/en/latest/get_started/installation.html) 1.4.?+
+- [mmdet](https://mmdetection.readthedocs.io/en/latest/get_started.html#installation) 2.19.0+
 
 
 Compatible MMCV, MMClassification and MMDetection versions are shown as below. Please install the correct version of them to avoid installation issues.
 
-| MMFewShot version   |    MMCV version   |      MMClassification version     |      MMDetection version     |
-|:-------------------:|:-----------------:|:---------------------------------:|:----------------------------:|
-| master              | mmcv-full>=1.3.12 |      mmdet >= 2.16.0              |      mmcls >=0.15.0          |
+| MMRotate version   |    MMCV version   |      MMClassification version     |
+|:-------------------:|:-----------------:|:---------------------------------:|
+| master              | mmcv-full>=1.4.? |      mmdet >= 2.19.0              |
 
 **Note:** You need to run `pip uninstall mmcv` first if you have mmcv installed.
 If mmcv and mmcv-full are both installed, there will be `ModuleNotFoundError`.
@@ -47,17 +46,17 @@ If mmcv and mmcv-full are both installed, there will be `ModuleNotFoundError`.
     ```
 
 
-### Install MMFewShot
+### Install MMRotate
 
-It is recommended to install MMFewShot with [MIM](https://github.com/open-mmlab/mim),
+It is recommended to install MMRotate with [MIM](https://github.com/open-mmlab/mim),
 which automatically handle the dependencies of OpenMMLab projects, including mmcv and other python packages.
 
 ```shell
 pip install openmim
-mim install mmfewshot
+mim install mmrotate
 ```
 
-Or you can still install MMFewShot manually:
+Or you can still install MMRotate manually:
 
 1. Install mmcv-full.
 
@@ -73,35 +72,35 @@ Or you can still install MMFewShot manually:
 
     See [here](https://github.com/open-mmlab/mmcv#installation) for different versions of MMCV compatible to different PyTorch and CUDA versions.
 
-    Optionally you can compile mmcv from source if you need to develop both mmcv and mmfewshot. Refer to the [guide](https://github.com/open-mmlab/mmcv#installation) for details.
+    Optionally you can compile mmcv from source if you need to develop both mmcv and mmrotate. Refer to the [guide](https://github.com/open-mmlab/mmcv#installation) for details.
 
 2. Install MMClassification and MMDetection.
 
-    You can simply install mmclassification and mmdetection with the following command:
+    You can simply install mmdetection with the following command:
 
     ```shell
-    pip install mmcls mmdet
+    pip install mmdet
     ```
 
-3. Install MMFewShot.
+3. Install MMRotate.
 
-    You can simply install mmfewshot with the following command:
+    You can simply install mmrotate with the following command:
 
     ```shell
-    pip install mmfewshot
+    pip install mmrotate
     ```
 
     or clone the repository and then install it:
 
     ```shell
-    git clone https://github.com/open-mmlab/mmfewshot.git
-    cd mmfewshot
+    git clone https://github.com/open-mmlab/mmrotate.git
+    cd mmrotate
     pip install -r requirements/build.txt
     pip install -v -e .  # or "python setup.py develop"
 
 **Note:**
 
-a. When specifying `-e` or `develop`, MMFewShot is installed on dev mode
+a. When specifying `-e` or `develop`, MMRotate is installed on dev mode
 , any local modifications made to the code will take effect without reinstallation.
 
 b. If you would like to use `opencv-python-headless` instead of `opencv-python`,
@@ -113,17 +112,17 @@ c. Some dependencies are optional. Simply running `pip install -v -e .` will
 
 ### Another option: Docker Image
 
-We provide a [Dockerfile](https://github.com/open-mmlab/mmfewshot/blob/master/docker/Dockerfile) to build an image. Ensure that you are using [docker version](https://docs.docker.com/engine/install/) >=19.03.
+We provide a [Dockerfile](https://github.com/open-mmlab/mmrotate/blob/master/docker/Dockerfile) to build an image. Ensure that you are using [docker version](https://docs.docker.com/engine/install/) >=19.03.
 
 ```shell
 # build an image with PyTorch 1.6, CUDA 10.1
-docker build -t mmfewshot docker/
+docker build -t mmrotate docker/
 ```
 
 Run it with
 
 ```shell
-docker run --gpus all --shm-size=8g -it -v {DATA_DIR}:/mmfewshot/data mmfewshot
+docker run --gpus all --shm-size=8g -it -v {DATA_DIR}:/mmrotate/data mmrotate
 ```
 
 ### A from-scratch setup script
@@ -142,9 +141,9 @@ pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu101/torch1.7
 # install mmclassification mmdetection
 pip install mmcls mmdet
 
-# install mmfewshot
-git clone https://github.com/open-mmlab/mmfewshot.git
-cd mmfewshot
+# install mmrotate
+git clone https://github.com/open-mmlab/mmrotate.git
+cd mmrotate
 pip install -r requirements/build.txt
 pip install -v -e .  # or "python setup.py develop"
 ```
@@ -152,11 +151,10 @@ pip install -v -e .  # or "python setup.py develop"
 
 ## Verification
 
-To verify whether MMFewShot is installed correctly, we can run the demo code and inference a demo image.
+To verify whether MMRotate is installed correctly, we can run the demo code and inference a demo image.
 
-Please refer to [few shot classification demo](https://github.com/open-mmlab/mmfewshot/tree/main/demo#few-shot-classification-demo)
-or [few shot detection demo](https://github.com/open-mmlab/mmfewshot/tree/main/demo#few-shot-detection-demo)
+Please refer to [demo](https://github.com/open-mmlab/mmrotate/tree/main/demo)
  for more details. The demo code is supposed to run successfully upon you finish the installation.
 
 ## Dataset Preparation
-Please refer to [data preparation](https://github.com/open-mmlab/mmfewshot/tree/main/tools/data) for dataset preparation.
+Please refer to [data preparation](https://github.com/open-mmlab/mmrotate/tree/main/tools/data) for dataset preparation.

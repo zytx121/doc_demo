@@ -1,65 +1,56 @@
-# Model Zoo
+## Benchmark and Model Zoo
+
+- [RetinaNet-OBB/HBB](../configs/rretinanet/README.md) (ICCV'2017)
+- [FasterRCNN-OBB](../configs/rfaster_rcnn/README.md) (TPAMI'2017)
+- [RepPoints-OBB](../configs/reppoints/README.md) (ICCV'2019)
+- [RoI Transformer](../configs/roi_trans/README.md) (CVPR'2019)
+- [Gliding Vertex](../configs/gliding_vertex/README.md) (TPAMI'2020)
+- [R<sup>3</sup>Det](../configs/r3det/README.md) (AAAI'2021)
+- [S<sup>2</sup>A-Net](../configs/s2anet/README.md) (TGRS'2021)
+- [ReDet](../configs/redet/README.md) (CVPR'2021)
+- [Beyond Bounding-Box](../configs/cfa/README.md) (CVPR'2021)
+- [Oriented R-CNN](../configs/oriented_rcnn/README.md) (ICCV'2021)
+- [GWD](../configs/gwd/README.md) (ICML'2021)
+- [KLD](../configs/kld/README.md) (NeurIPS'2021)
+- [KFIoU](../configs/kfiou/README.md) (stay tuned)
+- [G-Rep](../configs/g_reppoints/README.md) (stay tuned)
 
 
-## Few Shot Classification Model Zoo
+| Model | Backbone | Lr schd | MS | RR | Angle | box AP | Official | Download |
+|:--------:|:--------:|:-------:|:--:|:------:|:--------:|:------:|:------:|:------:|
+|RRetinaNet HBB |  R50-FPN |    1x   |  - |    -   | v1 |  65.19  |  [65.73](https://github.com/yangxue0827/RotationDetection)  | [Baidu:0518](https://pan.baidu.com/s/1ijkb0y_yAaicT-Z9_ljKeA)/[Google](https://drive.google.com/drive/folders/1CeD3QPTQRRSI7WKMwWE3EUWhzD2qN4e4?usp=sharing)
+|RRetinaNet OBB|  R50-FPN |    1x   |  - |    -   | v3 |  68.20  |  [69.40](https://github.com/jbwang1997/OBBDetection/tree/master/configs/obb/retinanet_obb)  | [Baidu:0518](https://pan.baidu.com/s/1ijkb0y_yAaicT-Z9_ljKeA)/[Google](https://drive.google.com/drive/folders/1CeD3QPTQRRSI7WKMwWE3EUWhzD2qN4e4?usp=sharing)
+|RRetinaNet OBB |  R50-FPN |    1x   |  - |    -   | v2 |  68.64  |  [68.40](https://github.com/csuhan/s2anet)  | [Baidu:0518](https://pan.baidu.com/s/14o4sNxzfWQj1oGFjBzX8Kg)/[Google]()
+|RRetinaNet HBB + GWD |  R50-FPN |    1x   |  - |    -   | v1 |  68.73  |  [68.93](https://github.com/yangxue0827/RotationDetection)  | [Baidu:0518](https://pan.baidu.com/s/1hjDe3StMpjfb9aHEPrrfFQ)/[Google]()
+|CFA|  R50-FPN |    1x   |  - |    -   | v1 |  69.34  |  -  | [Baidu:0518](https://pan.baidu.com/s/1gA_c1Ws-QkjFEwRN6XxdXQ)/[Google]()
+|RRetinaNet HBB + KFIoU |  R50-FPN |    1x   |  - |    -   | v2 |  69.61  |  -  | [Baidu:0518](https://pan.baidu.com/s/1GF_8JNzfdnOr71Jvn-L8jA)/[Google]()
+|RRetinaNet HBB + KFIoU |  R50-FPN |    1x   |  - |    -   | v3 |  69.63  |  -  | [Baidu:0518](https://pan.baidu.com/s/1KehRYQsLHRMKrLn86jI34w)/[Google]()
+|RRetinaNet HBB + KFIoU |  R50-FPN |    1x   |  - |    -   | v1 |  69.86  |  [70.64](https://github.com/yangxue0827/RotationDetection)  | [Baidu:0518](https://pan.baidu.com/s/1Uw47irBCct72GO6aYPL9qQ)/[Google]()
+|RRetinaNet HBB + KLD |  R50-FPN |    1x   |  - |    -   | v1 |  69.90  |  [71.28](https://github.com/yangxue0827/RotationDetection)  | [Baidu:0518](https://pan.baidu.com/s/1iZUyX-DZV16_lqs19jlmFQ)/[Google]()
+|R<sup>3</sup>Det|  R50-FPN |    1x   |  - |    -   | v1 |  70.41  |  [70.66](https://github.com/yangxue0827/RotationDetection)  | [Baidu:0518](https://pan.baidu.com/s/1ECNAzE3xaXXO7Pj2p_bLDw)/[Google]()
+|R<sup>3</sup>Det*|  R50-FPN |    1x   |  - |    -   | v1 |  70.86  |  -  | [Baidu:0518](https://pan.baidu.com/s/1kWg-bz2KjDcI-s_IWvUE6A)/[Google]()
+|R<sup>3</sup>Det + KFIoU|  R50-FPN |    1x   |  - |    -   | v1 |  72.04  |  [72.28](https://github.com/yangxue0827/RotationDetection)  | [Baidu:0518](https://pan.baidu.com/s/1m1b-Kpub-JOzuG_UiOBytw)/[Google]()
+|R<sup>3</sup>Det* + KLD|  R50-FPN |    1x   |  - |    -   | v1 |  72.33  |  -  | -
+|R<sup>3</sup>Det + KLD|  R50-FPN |    1x   |  - |    -   | v1 |  72.36  |  [71.73](https://github.com/yangxue0827/RotationDetection)  | [Baidu:0518](https://pan.baidu.com/s/164vjqvXSb6xquX38dLthPg)/[Google]()
+|R<sup>3</sup>Det* + KFIoU|  R50-FPN |    1x   |  - |    -   | v1 |  72.40  |  -  | [Baidu:0518](https://pan.baidu.com/s/1xkdJW20AOMaOWqsCvDPUxQ)/[Google]()
+|CFA|  R50-FPN |    40e   |  - |    -   | v1 |  72.67  |  -  | [Baidu:0518](https://pan.baidu.com/s/1ubPwjtW_NxaKFvkqHXFkuA)/[Google]()
+|RFaster RCNN OBB|  R50-FPN |    1x   |  - |    -   | v3 |  72.98  |  -  | [Baidu:0518](https://pan.baidu.com/s/1PrrC2dv43wzYTPNIqZIuOQ)/[Google](https://drive.google.com/drive/folders/1-hxWtfLAGiRHGgStoUj4xPnFIfjVZndS?usp=sharing)
+|Gliding Vertex|  R50-FPN |    1x   |  - |    -   | v3 |  72.98  |  -  | [Baidu:0518](https://pan.baidu.com/s/1RfXstYFpRQCOcBeQhhz-6A)/[Google]()
+|S<sup>2</sup>ANet|  R50-FPN |    1x   |  - |    -   | v2 |  73.89  |  [73.99](https://github.com/csuhan/s2anet)  | [Baidu:0518](https://pan.baidu.com/s/1oEkvvupDSovLDhoyRjJhPA)/[Google]()
+|Oriented RCNN|  R50-FPN |    1x   |  - |    -   | v3 |  75.99  |  [75.87](https://github.com/jbwang1997/OBBDetection/tree/master/configs/obb/oriented_rcnn)  | [Baidu:0518](https://pan.baidu.com/s/1wufikobfGGjR3rvv7hQnqQ)/[Google]()
+|RoI Transformer|  R50-FPN |    1x   |  - |    -   | v3 |  76.00  |  [73.76](https://github.com/dingjiansw101/AerialDetection/blob/master/MODEL_ZOO.md)  | [Baidu:0518](https://pan.baidu.com/s/1J-CvwThMUWUHqgSMmy1yww)/[Google](https://drive.google.com/drive/folders/1JMml12u55uAfkzd1UC-cQ30fL6Yn1dGm?usp=sharing)
+|ReDet|  ReResNet-ReFPN |    1x   |  - |    -   | v3 |  76.03  |  [76.25](https://github.com/csuhan/ReDet)  | [Baidu:0518](https://pan.baidu.com/s/1HKaMrRrw1Cg2GCEBnSeGpQ)/[Google](https://drive.google.com/drive/folders/1Hzcx2kzdCFIVnSmu7mUfHQED-ektB2Pn?usp=sharing)
+|RoI Transformer + KFIoU|  R50-FPN |    1x   |  - |   -   | v3 |  76.17  |  -  | [Baidu:0518](https://pan.baidu.com/s/1A4k8OXlJuM7I6JDEylJDOQ)/[Google]()
+|Oriented RCNN|  Swin-tiny-FPN |    1x   |  - |   -   | v3 |  76.31  |  -  | [Baidu:0518](https://pan.baidu.com/s/1LPkGgyHYVAvJqOOJ7Hu-Ew)/[Google]()
+|RoI Transformer|  Swin-tiny-FPN |    1x   |  - |   -   | v3 |  77.18  |  -  | [Baidu:0518](https://pan.baidu.com/s/1xb8jGewrp2-zw7mvPSQnig)/[Google]()
+|RRetinaNet OBB|  R50-FPN |    1x   |  √ |    √   | v3 |  77.45  |  -  | [Baidu:0518](https://pan.baidu.com/s/1iuyrMOOLSSJUcsxlR92CtA)/[Google]()
+|RoI Transformer + KFIoU|  Swin-tiny-FPN |    1x   |  - |   -   | v3 |  77.74  |  -  | [Baidu:0518](https://pan.baidu.com/s/1-quUuh70tp04IuZizzsNWQ)/[Google]()
+|RoI Transformer|  R50-FPN |    1x   |  √ |   -   | v3 |  79.58  |  -  | [Baidu:0518](https://pan.baidu.com/s/1_R6X-5aTgfZOI_O9EiOmpw)/[Google]()
+|R<sup>3</sup>Det + KFIoU|  R50-FPN |    1x   |  √ |   √   | v1 |  79.73  |  -  | [Baidu:0518](https://pan.baidu.com/s/1iQO1KYeKjnBrJqpJNWCuaw)/[Google]()
+|R<sup>3</sup>Det + KFIoU|  Swin-tiny-FPN |    1x   |  √ |   √   | v1 |  80.06  |  -  | [Baidu:0518](https://pan.baidu.com/s/1yUR6pBuYHfEY3PEXoFaX5Q)/[Google]()
+|RoI Transformer + KFIoU|  R50-FPN |    1x   |  √ |   √   | v3 |  80.22  |  -  | [Baidu:0518](https://pan.baidu.com/s/1a9eF6xKg-ab4W5lxaseEzA)/[Google]()
+|R<sup>3</sup>Det + KFIoU|  Swin-tiny-FPN |    2x   |  √ |   √   | v1 |  80.90  |  -  | [Baidu:0518](https://pan.baidu.com/s/1CRqt-MbxwR3xlGQcEBAt7w)/[Google]()
+|RoI Transformer + KFIoU|  Swin-tiny-FPN |    1x   |  √ |   √   | v3 |  80.93  |  -  | [Baidu:0518](https://pan.baidu.com/s/1m7uWgwvhvLIsC8jd3ny2oQ)/[Google]()
 
-
-#### Baseline
-
-Please refer to [Baseline](https://github.com/open-mmlab/mmfewshot/tree/main/configs/classification/baseline) for details.
-
-#### Baseline++
-
-Please refer to [Baseline++](https://github.com/open-mmlab/mmfewshot/tree/main/configs/classification/baseline_plus) for details.
-
-#### ProtoNet
-
-Please refer to [ProtoNet](https://github.com/open-mmlab/mmfewshot/tree/main/configs/classification/proto_net) for details.
-
-#### RelationNet
-
-Please refer to [RelationNet](https://github.com/open-mmlab/mmfewshot/tree/main/configs/classification/relation_net) for details.
-
-#### MatchingNet
-
-Please refer to [MatchingNet](https://github.com/open-mmlab/mmfewshot/tree/main/configs/classification/matching_net) for details.
-
-#### MAML
-
-Please refer to [MAML](https://github.com/open-mmlab/mmfewshot/tree/main/configs/classification/maml) for details.
-
-#### NegMargin
-
-Please refer to [NegMargin](https://github.com/open-mmlab/mmfewshot/tree/main/configs/classification/neg_margin) for details.
-
-#### Meta Baseline
-
-Please refer to [Meta Baseline](https://github.com/open-mmlab/mmfewshot/tree/main/configs/classification/meta_baseline) for details.
-
-
-
-## Few Shot Detection Model Zoo
-
-#### TFA
-
-Please refer to [TFA](https://github.com/open-mmlab/mmfewshot/tree/main/configs/detection/tfa) for details.
-
-#### FSCE
-
-Please refer to [FSCE](https://github.com/open-mmlab/mmfewshot/tree/main/configs/detection/fsce) for details.
-
-#### Meta RCNN
-
-Please refer to [Meta RCNN](https://github.com/open-mmlab/mmfewshot/tree/main/configs/detection/meta_rcnn) for details.
-
-#### FSDetView
-
-Please refer to [FSDetView](https://github.com/open-mmlab/mmfewshot/tree/main/configs/detection/fsdetview) for details.
-
-#### Attention RPN
-
-Please refer to [Attention RPN](https://github.com/open-mmlab/mmfewshot/tree/main/configs/detection/attention_rpn) for details.
-
-#### MPSR
-
-Please refer to [MPSR](https://github.com/open-mmlab/mmfewshot/tree/main/configs/detection/mpsr) for details.
+- `MS` means multiple scale image split.
+- `RR` means random rotation.

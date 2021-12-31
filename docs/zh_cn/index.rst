@@ -12,16 +12,9 @@ Welcome to MMFewShot's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: 分类教程
+   :caption: 教程
 
-   classification/index.rst
-
-
-.. toctree::
-   :maxdepth: 2
-   :caption: 检测教程
-
-   detection/index.rst
+   tutorials/index.rst
 
 
 .. toctree::

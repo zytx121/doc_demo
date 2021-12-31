@@ -19,16 +19,9 @@ Welcome to MMFewShot's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Classification Tutorials
+   :caption: Tutorials
 
-   classification/index.rst
-
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Detection Tutorials
-
-   detection/index.rst
+   tutorials/index.rst
 
 
 .. toctree::
