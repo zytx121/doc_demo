@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 # -- Project information -----------------------------------------------------
 
 project = 'mmrotate'
-copyright = '2018-2021, OpenMMLab'
+copyright = '2018-2022, OpenMMLab'
 author = 'MMRotate Author'
 version_file = '../../mmrotate/version.py'
 

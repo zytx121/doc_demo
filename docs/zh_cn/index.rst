@@ -1,4 +1,4 @@
-Welcome to MMFewShot's documentation!
+Welcome to MMRotate's documentation!
 =======================================
 
 .. toctree::
