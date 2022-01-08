@@ -20,11 +20,11 @@ To modify the learning rate of the model, the users only need to modify the `lr`
 A customized optimizer could be defined as following.
 
 Assume you want to add a optimizer named `MyOptimizer`, which has arguments `a`, `b`, and `c`.
-You need to create a new directory named `mmfewshot/detection/core/optimizer`.
-And then implement the new optimizer in a file, e.g., in `mmfewshot/detection/core/optimizer/my_optimizer.py`:
+You need to create a new directory named `mmrotate/core/optimizer`.
+And then implement the new optimizer in a file, e.g., in `mmrotate/core/optimizer/my_optimizer.py`:
 
 ```python
-from .registry import OPTIMIZERS
+from mmdet.core.optimizer.registry import OPTIMIZERS
 from torch.optim import Optimizer
 
 
@@ -39,9 +39,9 @@ class MyOptimizer(Optimizer):
 
 To find the above module defined above, this module should be imported into the main namespace at first. There are two options to achieve it.
 
-- Modify `mmfewshot/detection/core/optimizer/__init__.py` to import it.
+- Modify `mmrotate/core/optimizer/__init__.py` to import it.
 
-    The newly defined module should be imported in `mmfewshot/detection/core/optimizer/__init__.py` so that the registry will
+    The newly defined module should be imported in `mmrotate/core/optimizer/__init__.py` so that the registry will
     find the new module and add it:
 
 ```python
@@ -51,12 +51,12 @@ from .my_optimizer import MyOptimizer
 - Use `custom_imports` in the config to manually import it
 
 ```python
-custom_imports = dict(imports=['mmfewshot.detection.core.optimizer.my_optimizer'], allow_failed_imports=False)
+custom_imports = dict(imports=['mmrotate.core.optimizer.my_optimizer'], allow_failed_imports=False)
 ```
 
-The module `mmfewshot.detection.core.optimizer.my_optimizer` will be imported at the beginning of the program and the class `MyOptimizer` is then automatically registered.
+The module `mmrotate.core.optimizer.my_optimizer` will be imported at the beginning of the program and the class `MyOptimizer` is then automatically registered.
 Note that only the package containing the class `MyOptimizer` should be imported.
-`mmfewshot.detection.core.optimizer.my_optimizer.MyOptimizer` **cannot** be imported directly.
+`mmrotate.core.optimizer.my_optimizer.MyOptimizer` **cannot** be imported directly.
 
 Actually users can use a totally different file directory structure using this importing method, as long as the module root can be located in `PYTHONPATH`.
 
@@ -84,7 +84,7 @@ The users can do those fine-grained parameter tuning through customizing optimiz
 from mmcv.utils import build_from_cfg
 
 from mmcv.runner.optimizer import OPTIMIZER_BUILDERS, OPTIMIZERS
-from mmfewshot.utils import get_root_logger
+from mmrotate.utils import get_root_logger
 from .my_optimizer import MyOptimizer
 
 
@@ -109,8 +109,11 @@ Tricks not implemented by the optimizer should be implemented through optimizer 
     Some models need gradient clip to clip the gradients to stabilize the training process. An example is as below:
 
     ```python
-    optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
+    optimizer_config = dict(
+        _delete_=True, grad_clip=dict(max_norm=35, norm_type=2))
     ```
+
+    If your config inherits the base config which already sets the `optimizer_config`, you might need `_delete_=True` to override the unnecessary settings. See the [config documentation](https://mmdetection.readthedocs.io/en/latest/tutorials/config.html) for more details.
 
 - __Use momentum schedule to accelerate model convergence__:
     We support momentum scheduler to modify model's momentum according to learning rate, which could make the model converge in a faster way.
@@ -185,7 +188,9 @@ so that 1 epoch for training and 1 epoch for validation will be run iteratively.
 
 #### 1. Implement a new hook
 
-Here we give an example of creating a new hook in MMPose and using it in training.
+There are some occasions when the users might need to implement a new hook. MMRotate supports customized hooks in training. Thus the users could implement a hook directly in mmrotate or their mmdet-based codebases and use the hook by only modifying the config in training.
+Here we give an example of creating a new hook in mmrotate and using it in training.
+
 ```python
 from mmcv.runner import HOOKS, Hook
 
@@ -219,11 +224,11 @@ Depending on the functionality of the hook, the users need to specify what the h
 
 #### 2. Register the new hook
 
-Then we need to make `MyHook` imported. Assuming the file is in `mmfewshot/detection/core/utils/my_hook.py` there are two ways to do that:
+Then we need to make `MyHook` imported. Assuming the file is in `mmrotate/core/utils/my_hook.py` there are two ways to do that:
 
-- Modify `mmfewshot/core/utils/__init__.py` to import it.
+- Modify `mmrotate/core/utils/__init__.py` to import it.
 
-    The newly defined module should be imported in `mmfewshot/detection/core/utils/__init__.py` so that the registry will
+    The newly defined module should be imported in `mmrotate/core/utils/__init__.py` so that the registry will
     find the new module and add it:
 
 ```python
@@ -233,7 +238,7 @@ from .my_hook import MyHook
 - Use `custom_imports` in the config to manually import it
 
 ```python
-custom_imports = dict(imports=['mmfewshot.detection.core.utils.my_hook'], allow_failed_imports=False)
+custom_imports = dict(imports=['mmrotate.core.utils.my_hook'], allow_failed_imports=False)
 ```
 
 #### 3. Modify the config
@@ -258,10 +263,14 @@ By default the hook's priority is set as `NORMAL` during registration.
 
 If the hook is already implemented in MMCV, you can directly modify the config to use the hook as below
 
+#### 4. Example: `NumClassCheckHook`
+
+We implement a customized hook named  [NumClassCheckHook](https://github.com/open-mmlab/mmdetection/blob/master/mmdet/datasets/utils.py) to check whether the `num_classes` in head matches the length of `CLASSSES` in `dataset`.
+
+We set it in [default_runtime.py](https://github.com/open-mmlab/mmdetection/blob/master/configs/_base_/default_runtime.py).
+
 ```python
-custom_hooks =  [
-    dict(type='MMCVHook', a=a_value, b=b_value, priority='NORMAL')
-]
+custom_hooks = [dict(type='NumClassCheckHook')]
 ```
 
 ### Modify default runtime hooks
@@ -305,7 +314,7 @@ log_config = dict(
 
 #### Evaluation config
 
-The config of `evaluation` will be used to initialize the `EvalHook`.
+The config of `evaluation` will be used to initialize the [`EvalHook`](https://github.com/open-mmlab/mmdetection/blob/7a404a2c000620d52156774a5025070d9e00d918/mmdet/core/evaluation/eval_hooks.py#L8).
 Except the key `interval`, other arguments such as `metric` will be passed to the `dataset.evaluate()`
 
 ```python
