@@ -1,312 +1,239 @@
-# Tutorial 2: Adding New Dataset
+# Tutorial 2: Customize Datasets
 
+## Support new data format
 
-## Customize dataset
+To support a new data format, you can convert them to existing formats (DOTA format). You could choose to convert them offline (before training by a script) or online (implement a new dataset and do the conversion at training). 
+In MMRotate, we recommend to convert the data into DOTA formats and do the conversion offline, thus you only need to modify the config's data annotation paths and classes after the conversion of your data.
 
-### Load annotations from file
-Different from the config in mmdet using `ann_file` to load a single dataset, we use `ann_cfg` to support the complex few shot setting.
+### Reorganize new data formats to existing format
 
-The `ann_cfg` is a list of dict and support two type of file:
-- loading annotation from the regular `ann_file` of dataset.
-    ```python
-    ann_cfg = [dict(type='ann_file', ann_file='path/to/ann_file'), ...]
-    ```
-    For `FewShotVOCDataset`, we also support load specific class from `ann_file` in `ann_classes`.
-    ```python
-    dict(type='ann_file', ann_file='path/to/ann_file', ann_classes=['dog', 'cat'])
-    ```
+The simplest way is to convert your dataset to existing dataset formats (DOTA).
 
-- loading annotation from a json file saved by a dataset.
-    ```python
-    ann_cfg = [dict(type='saved_dataset', ann_file='path/to/ann_file'), ...]
-    ```
-    To save a dataset, we can set the `save_dataset=True` in config file,
-    and the dataset will be saved as `${WORK_DIR}/{TIMESTAMP}_saved_data.json`
-    ```python
-    dataset=dict(type='FewShotVOCDataset', save_dataset=True, ...)
-    ```
+The annotation txt files in DOTA format:
 
-### Load annotations from predefined benchmark
-
-Unlike few shot classification can test on thousands of tasks in a short time,
-it is hard to follow the same protocol in few shot detection because of the computation cost.
-Thus, we provide the predefined data split for reproducibility.
-These data splits directly use the files released from TFA [repo](https://github.com/ucbdrive/few-shot-object-detection).
-The details of data preparation can refer to [here](https://github.com/open-mmlab/mmfewshot/tree/main/tools/data/detection).
-
-To load these predefined data splits, the type of dataset need to be set to
-`FewShotVOCDefaultDataset` or `FewShotCocoDefaultDataset`.
-We provide data splits of each reproduced checkpoint for each method.
-In config file, we can use `method` and `setting` to determine which data split to load.
-
-Here is an example of config:
-```python
-dataset = dict(
-        type='FewShotVOCDefaultDataset',
-        ann_cfg=[dict(method='TFA', setting='SPLIT1_1SHOT')]
-)
+```text
+184 2875 193 2923 146 2932 137 2885 plane 0
+66 2095 75 2142 21 2154 11 2107 plane 0
+...
 ```
 
-### Load annotations from another dataset during runtime
+Each line represents an object and records it as a 10-dimensional array `A`. 
+- `A[0:8]`: Polygons with format `(x1, y1, x2, y2, x3, y3, x4, y4)`.
+- `A[8]`: Category.
+- `A[9]`: Difficulty.
 
-In few shot setting, we can use `FewShotVOCCopyDataset` or `FewShotCocoCopyDataset` to copy a dataset from other dataset
-during runtime for some special cases, such as copying online random sampled support set for model initialization before evaluation.
-It needs user to modify code in `mmfewshot.detection.apis`.
-More details can refer to mmfewshot/detection/apis/train.py.
-Here is an example of config:
+After the data pre-processing, there are two steps for users to train the customized new dataset with existing format (e.g. DOTA format):
+
+1. Modify the config file for using the customized dataset.
+2. Check the annotations of the customized dataset.
+
+Here we give an example to show the above two steps, which uses a customized dataset of 5 classes with COCO format to train an existing Cascade Mask R-CNN R50-FPN detector.
+
+#### 1. Modify the config file for using the customized dataset
+
+There are two aspects involved in the modification of config file:
+
+1. The `data` field. Specifically, you need to explicitly add the `classes` fields in `data.train`, `data.val` and `data.test`.
+2. The `num_classes` field in the `model` part. Explicitly over-write all the `num_classes` from default value (e.g. 80 in COCO) to your classes number.
+
+In `configs/my_custom_config.py`:
+
 ```python
-dataset = dict(
-        type='FewShotVOCCopyDataset',
-        ann_cfg=[dict(data_infos=FewShotVOCDataset.data_infos)])
-```
 
-### Use predefined class splits
-The predefined class splits are supported in datasets.
-For VOC, we support [`ALL_CLASSES_SPLIT1`,`ALL_CLASSES_SPLIT2`, `ALL_CLASSES_SPLIT3`,
-`NOVEL_CLASSES_SPLIT1`, `NOVEL_CLASSES_SPLIT2`, `NOVEL_CLASSES_SPLIT3`, `BASE_CLASSES_SPLIT1`,
-`BASE_CLASSES_SPLIT2`, `BASE_CLASSES_SPLIT3`].
-For COCO, we support [`ALL_CLASSES`, `NOVEL_CLASSES`, `BASE_CLASSES`]
+# the new config inherits the base configs to highlight the necessary modification
+_base_ = './rretinanet_hbb_r50_fpn_1x_dota_v1'
 
-Here is an example of config:
-```python
+# 1. dataset settings
+dataset_type = 'DOTADataset'
+classes = ('a', 'b', 'c', 'd', 'e')
 data = dict(
-    train=dict(type='FewShotVOCDataset', classes='ALL_CLASSES_SPLIT1'),
-    val=dict(type='FewShotVOCDataset', classes='ALL_CLASSES_SPLIT1'),
-    test=dict(type='FewShotVOCDataset', classes='ALL_CLASSES_SPLIT1'))
+    samples_per_gpu=2,
+    workers_per_gpu=2,
+    train=dict(
+        type=dataset_type,
+        # explicitly add your class names to the field `classes`
+        classes=classes,
+        ann_file='path/to/your/train/annotation_data',
+        img_prefix='path/to/your/train/image_data'),
+    val=dict(
+        type=dataset_type,
+        # explicitly add your class names to the field `classes`
+        classes=classes,
+        ann_file='path/to/your/val/annotation_data',
+        img_prefix='path/to/your/val/image_data'),
+    test=dict(
+        type=dataset_type,
+        # explicitly add your class names to the field `classes`
+        classes=classes,
+        ann_file='path/to/your/test/annotation_data',
+        img_prefix='path/to/your/test/image_data'))
+
+# 2. model settings
+model = dict(
+    bbox_head=dict(
+        type='RRetinaHead',
+        # explicitly over-write all the `num_classes` field from default 15 to 5.
+        num_classes=15))
 ```
 
-Also, the class splits can be used to report the evaluation results on different class splits.
-Here is an example of config:
-```python
-evaluation = dict(class_splits=['BASE_CLASSES_SPLIT1', 'NOVEL_CLASSES_SPLIT1'])
-```
+#### 2. Check the annotations of the customized dataset
 
-### Customize the number of annotations
-For FewShotDataset, we support two ways to filter extra annotations.
-- `ann_shot_filter`: use a dict to specify the class, and
-  the corresponding maximum number of instances when loading
-  the annotation file.
-  For example, we only want 10 instances of dog and 5 instances of person, while other
-  instances from other classes remain unchanged:
-  ```python
-  dataset=dict(type='FewShotVOCDataset',
-               ann_shot_filter=dict(dog=10, person=5),
-               ...)
-  ```
-- `num_novel_shots` and `num_base_shots`: use predefined class splits
-  to indicate the corresponding maximum number of instances.
-  For example, we only want 1 instance for each novel class and 3 instances for base class:
-  ```python
-  dataset=dict(
-      type='FewShotVOCDataset',
-      num_novel_shots=1,
-      num_base_shots=2,
-      ...)
-  ```
+Assuming your customized dataset is DOTA format, make sure you have the correct annotations in the customized dataset:
 
-### Customize the organization of annotations
-We also support to split the annotation into instance wise, i.e. each image only have one instance,
-and the images can be repeated.
-```python
-dataset=dict(
-    type='FewShotVOCDataset',
-    instance_wise=True,
-    ...)
-```
-
-### Customize pipeline
-To support different pipelines in single dataset, we can use `multi_pipelines`.
-In config file, `multi_pipelines` use the name of keys to indicate specific piplines.
-Here is an example of config:
-```python
-multi_pipelines = dict(
-    query=[
-        dict(type='LoadImageFromFile'),
-        dict(type='LoadAnnotations', with_bbox=True),
-        dict(type='Resize', img_scale=(1000, 600), keep_ratio=True),
-        dict(type='RandomFlip', flip_ratio=0.5),
-        dict(type='Normalize', **img_norm_cfg),
-        dict(type='DefaultFormatBundle'),
-        dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
-    ],
-    support=[
-        dict(type='LoadImageFromFile'),
-        dict(type='LoadAnnotations', with_bbox=True),
-        dict(type='Normalize', **img_norm_cfg),
-        dict(type='GenerateMask', target_size=(224, 224)),
-        dict(type='RandomFlip', flip_ratio=0.0),
-        dict(type='DefaultFormatBundle'),
-        dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
-    ])
-train=dict(
-    type='NWayKShotDataset',
-    dataset=dict(
-        type='FewShotCocoDataset',
-        ...
-        multi_pipelines=train_multi_pipelines))
-```
-When `multi_pipelines` is used, we need to specific the pipeline names in
-`prepare_train_img` to fetch the image.
-For example
-```python
-dataset.prepare_train_img(self, idx, 'query')
-```
+- The `classes` fields in your config file should have exactly the same elements and the same order with the `A[8]` in txt annotations. MMRotate automatically maps the uncontinuous `id` in `categories` to the continuous label indices, so the string order of `name` in `categories` field affects the order of label indices. Meanwhile, the string order of `classes` in config affects the label text during visualization of predicted bounding boxes.
 
 
-## Customize a new dataset wrapper
-In few shot setting, the various sampling logic is implemented by
-dataset wrapper.
-An example of customizing query-support data sampling logic for training:
 
-#### Create a new dataset wrapper
-We can create a new dataset wrapper in mmfewshot/detection/datasets/dataset_wrappers.py to customize sampling logic.
+## Customize datasets by dataset wrappers
 
-```python
-class MyDatasetWrapper:
-    def __init__(self, dataset, support_dataset=None, args_a, args_b, ...):
-        # query_dataset and support_dataset can use same dataset
-        self.query_dataset = dataset
-        self.support_dataset = support_dataset
-        if support_dataset is None:
-            self.support_dataset = dataset
-        ...
+MMRotate also supports many dataset wrappers to mix the dataset or modify the dataset distribution for training.
+Currently it supports to three dataset wrappers as below:
 
-    def __getitem__(self, idx):
-        ...
-        query_data = self.query_dataset.prepare_train_img(idx, 'query')
-        # customize sampling logic
-        support_idxes = ...
-        support_data = [
-            self.support_dataset.prepare_train_img(idx, 'support')
-            for idx in support_idxes
-        ]
-        return {'query_data': query_data, 'support_data': support_data}
+- `RepeatDataset`: simply repeat the whole dataset.
+- `ClassBalancedDataset`: repeat dataset in a class balanced manner.
+- `ConcatDataset`: concat datasets.
 
-```
+### Repeat dataset
 
-#### Update dataset builder
-We need to add the building code in mmfewshot/detection/datasets/builder.py
-for our customize dataset wrapper.
+We use `RepeatDataset` as wrapper to repeat the dataset. For example, suppose the original dataset is `Dataset_A`, to repeat it, the config looks like the following
 
-
-```python
-def build_dataset(cfg, default_args=None):
-    if isinstance(cfg, (list, tuple)):
-        dataset = ConcatDataset([build_dataset(c, default_args) for c in cfg])
-    ...
-    elif cfg['type'] == 'MyDatasetWrapper':
-        dataset = MyDatasetWrapper(
-            build_dataset(cfg['dataset'], default_args),
-            build_dataset(cfg['support_dataset'], default_args) if cfg.get('support_dataset', False) else None,
-            # pass customize arguments
-            args_a=cfg['args_a'],
-            args_b=cfg['args_b'],
-            ...)
-    else:
-        dataset = build_from_cfg(cfg, DATASETS, default_args)
-
-    return dataset
-```
-
-#### Update dataloader builder
-We need to add the building code of dataloader in mmfewshot/detection/datasets/builder.py,
-when the customize dataset wrapper will return list of Tensor.
-We can use `multi_pipeline_collate_fn` to handle this case.
-
-
-```python
-def build_dataset(cfg, default_args=None):
-    ...
-    if isinstance(dataset, MyDatasetWrapper):
-      from mmfewshot.utils import multi_pipeline_collate_fn
-      # `multi_pipeline_collate_fn` are designed to handle
-      # the data with list[list[DataContainer]]
-      data_loader = DataLoader(
-          dataset,
-          batch_size=batch_size,
-          sampler=sampler,
-          num_workers=num_workers,
-          collate_fn=partial(
-              multi_pipeline_collate_fn, samples_per_gpu=samples_per_gpu),
-          pin_memory=False,
-          worker_init_fn=init_fn,
-          **kwargs)
-    ...
-```
-
-
-#### Update the arguments in model
-
-The argument names in forward function need to be consistent with the customize dataset wrapper.
-
-```python
-class MyDetector(BaseDetector):
-    ...
-    def forward(self, query_data, support_data, ...):
-        ...
-```
-
-#### using customize dataset wrapper in config
-Then in the config, to use `MyDatasetWrapper` you can modify the config as the following,
 ```python
 dataset_A_train = dict(
-        type='MyDatasetWrapper',
-        args_a=None,
-        args_b=None,
+        type='RepeatDataset',
+        times=N,
         dataset=dict(  # This is the original config of Dataset_A
             type='Dataset_A',
             ...
-            multi_pipelines=train_multi_pipelines
-        ),
-        support_dataset=None
+            pipeline=train_pipeline
+        )
     )
 ```
 
+### Class balanced dataset
 
-## Customize a dataloader wrapper
-We also support to iterate two different dataset simultaneously by dataloader wrapper.
-
-An example of customizing dataloader wrapper for query and support dataset:
-#### Create a new dataloader wrapper
-We can create a new dataset wrapper in mmfewshot/detection/datasets/dataloader_wrappers.py to customize sampling logic.
+We use `ClassBalancedDataset` as wrapper to repeat the dataset based on category
+frequency. The dataset to repeat needs to instantiate function `self.get_cat_ids(idx)`
+to support `ClassBalancedDataset`.
+For example, to repeat `Dataset_A` with `oversample_thr=1e-3`, the config looks like the following
 
 ```python
-class MyDataloader:
-    def __init__(self, query_data_loader, support_data_loader):
-        self.dataset = query_data_loader.dataset
-        self.sampler = query_data_loader.sampler
-        self.query_data_loader = query_data_loader
-        self.support_data_loader = support_data_loader
-
-    def __iter__(self):
-        self.query_iter = iter(self.query_data_loader)
-        self.support_iter = iter(self.support_data_loader)
-        return self
-
-    def __next__(self):
-        query_data = self.query_iter.next()
-        support_data = self.support_iter.next()
-        return {'query_data': query_data, 'support_data': support_data}
-
-    def __len__(self) -> int:
-        return len(self.query_data_loader)
+dataset_A_train = dict(
+        type='ClassBalancedDataset',
+        oversample_thr=1e-3,
+        dataset=dict(  # This is the original config of Dataset_A
+            type='Dataset_A',
+            ...
+            pipeline=train_pipeline
+        )
+    )
 ```
 
-#### Update dataloader builder
-We need to add the build code in mmfewshot/detection/datasets/builder.py
-for our customize dataset wrapper.
+### Concatenate dataset
 
+There are three ways to concatenate the dataset.
+
+1. If the datasets you want to concatenate are in the same type with different annotation files, you can concatenate the dataset configs like the following.
+
+    ```python
+    dataset_A_train = dict(
+        type='Dataset_A',
+        ann_file = ['anno_file_1', 'anno_file_2'],
+        pipeline=train_pipeline
+    )
+    ```
+
+    If the concatenated dataset is used for test or evaluation, this manner supports to evaluate each dataset separately. To test the concatenated datasets as a whole, you can set `separate_eval=False` as below.
+
+    ```python
+    dataset_A_train = dict(
+        type='Dataset_A',
+        ann_file = ['anno_file_1', 'anno_file_2'],
+        separate_eval=False,
+        pipeline=train_pipeline
+    )
+    ```
+
+2. In case the dataset you want to concatenate is different, you can concatenate the dataset configs like the following.
+
+    ```python
+    dataset_A_train = dict()
+    dataset_B_train = dict()
+
+    data = dict(
+        imgs_per_gpu=2,
+        workers_per_gpu=2,
+        train = [
+            dataset_A_train,
+            dataset_B_train
+        ],
+        val = dataset_A_val,
+        test = dataset_A_test
+        )
+    ```
+
+    If the concatenated dataset is used for test or evaluation, this manner also supports to evaluate each dataset separately.
+
+3. We also support to define `ConcatDataset` explicitly as the following.
+
+    ```python
+    dataset_A_val = dict()
+    dataset_B_val = dict()
+
+    data = dict(
+        imgs_per_gpu=2,
+        workers_per_gpu=2,
+        train=dataset_A_train,
+        val=dict(
+            type='ConcatDataset',
+            datasets=[dataset_A_val, dataset_B_val],
+            separate_eval=False))
+    ```
+
+    This manner allows users to evaluate all the datasets as a single one by setting `separate_eval=False`.
+
+**Note:**
+
+1. The option `separate_eval=False` assumes the datasets use `self.data_infos` during evaluation. Therefore, COCO datasets do not support this behavior since COCO datasets do not fully rely on `self.data_infos` for evaluation. Combining different types of datasets and evaluating them as a whole is not tested thus is not suggested.
+2. Evaluating `ClassBalancedDataset` and `RepeatDataset` is not supported thus evaluating concatenated datasets of these types is also not supported.
+
+A more complex example that repeats `Dataset_A` and `Dataset_B` by N and M times, respectively, and then concatenates the repeated datasets is as the following.
 
 ```python
-def build_dataloader(dataset, ...):
-    if isinstance(dataset, MyDataset):
+dataset_A_train = dict(
+    type='RepeatDataset',
+    times=N,
+    dataset=dict(
+        type='Dataset_A',
         ...
-        query_data_loader = DataLoader(...)
-        support_data_loader = DataLoader(...)
-        # wrap two dataloaders with dataloader wrapper
-        data_loader = MyDataloader(
-            query_data_loader=query_data_loader,
-            support_data_loader=support_data_loader)
+        pipeline=train_pipeline
+    )
+)
+dataset_A_val = dict(
+    ...
+    pipeline=test_pipeline
+)
+dataset_A_test = dict(
+    ...
+    pipeline=test_pipeline
+)
+dataset_B_train = dict(
+    type='RepeatDataset',
+    times=M,
+    dataset=dict(
+        type='Dataset_B',
+        ...
+        pipeline=train_pipeline
+    )
+)
+data = dict(
+    imgs_per_gpu=2,
+    workers_per_gpu=2,
+    train = [
+        dataset_A_train,
+        dataset_B_train
+    ],
+    val = dataset_A_val,
+    test = dataset_A_test
+)
 
-    return dataset
 ```
