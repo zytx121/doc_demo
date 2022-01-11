@@ -5,15 +5,15 @@
 - PyTorch 1.6+
 - CUDA 9.2+
 - GCC 5+
-- [mmcv](https://mmcv.readthedocs.io/en/latest/#installation) 1.3.12+
-- [mmdet](https://mmdetection.readthedocs.io/en/latest/#installation) 2.16.0+
+- [mmcv](https://mmcv.readthedocs.io/en/latest/#installation) 1.4.3+
+- [mmdet](https://mmdetection.readthedocs.io/en/latest/#installation) 2.19.0+
 
 
 MMRotate 和 MMCV, MMDet 版本兼容性如下所示，需要安装正确的版本以避免安装出现问题。
 
-| MMRotate 版本   |    MMCV 版本   |      MMClassification 版本     |
+| MMRotate 版本   |    MMCV 版本   |      MMDetection 版本     |
 |:-------------------:|:-----------------:|:---------------------------------:|
-| master              | mmcv-full>=1.4.? |      mmdet >= 2.19.0               |
+| master              | mmcv-full>=1.4.3 |      mmdet >= 2.19.0               |
 
 **注意：**如果已经安装了 mmcv，首先需要使用 `pip uninstall mmcv` 卸载已安装的 mmcv，如果同时安装了 mmcv 和 mmcv-full，将会报 `ModuleNotFoundError` 错误。
 
@@ -39,7 +39,7 @@ MMRotate 和 MMCV, MMDet 版本兼容性如下所示，需要安装正确的版�
    `例 1` 例如在 `/usr/local/cuda` 下安装了 CUDA 10.1， 并想安装 PyTorch 1.7，则需要安装支持 CUDA 10.1 的预构建 PyTorch：
 
     ```shell
-    conda install pytorch==1.7.0 torchvision==0.8.0 torchaudio==0.7.0 cudatoolkit=10.1 -c pytorch
+    conda install pytorch==1.7.0 torchvision==0.8.0 cudatoolkit=10.1 -c pytorch
     ```
 
 
@@ -139,7 +139,7 @@ docker run --gpus all --shm-size=8g -it -v {DATA_DIR}:/mmrotate/data mmrotate
 conda create -n openmmlab python=3.7 -y
 conda activate openmmlab
 
-conda install pytorch==1.7.0 torchvision==0.8.0 torchaudio==0.7.0 cudatoolkit=10.1 -c pytorch
+conda install pytorch==1.7.0 torchvision==0.8.0 cudatoolkit=10.1 -c pytorch
 
 # 安装最新版本的 mmcv
 pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu101/torch1.7.0/index.html

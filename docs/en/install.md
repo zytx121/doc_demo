@@ -5,15 +5,15 @@
 - PyTorch 1.6+
 - CUDA 9.2+
 - GCC 5+
-- [mmcv](https://mmcv.readthedocs.io/en/latest/get_started/installation.html) 1.4.?+
+- [mmcv](https://mmcv.readthedocs.io/en/latest/get_started/installation.html) 1.4.3+
 - [mmdet](https://mmdetection.readthedocs.io/en/latest/get_started.html#installation) 2.19.0+
 
 
 Compatible MMCV, MMClassification and MMDetection versions are shown as below. Please install the correct version of them to avoid installation issues.
 
-| MMRotate version   |    MMCV version   |      MMClassification version     |
+| MMRotate version   |    MMCV version   |      MMDetection version     |
 |:-------------------:|:-----------------:|:---------------------------------:|
-| master              | mmcv-full>=1.4.? |      mmdet >= 2.19.0              |
+| master              | mmcv-full>=1.4.3 |      mmdet >= 2.19.0              |
 
 **Note:** You need to run `pip uninstall mmcv` first if you have mmcv installed.
 If mmcv and mmcv-full are both installed, there will be `ModuleNotFoundError`.
@@ -42,7 +42,7 @@ If mmcv and mmcv-full are both installed, there will be `ModuleNotFoundError`.
     PyTorch 1.7, you need to install the prebuilt PyTorch with CUDA 10.1.
 
     ```shell
-    conda install pytorch==1.7.0 torchvision==0.8.0 torchaudio==0.7.0 cudatoolkit=10.1 -c pytorch
+    conda install pytorch==1.7.0 torchvision==0.8.0 cudatoolkit=10.1 -c pytorch
     ```
 
 
@@ -74,7 +74,7 @@ Or you can still install MMRotate manually:
 
     Optionally you can compile mmcv from source if you need to develop both mmcv and mmrotate. Refer to the [guide](https://github.com/open-mmlab/mmcv#installation) for details.
 
-2. Install MMClassification and MMDetection.
+2. Install MMDetection.
 
     You can simply install mmdetection with the following command:
 
@@ -133,13 +133,13 @@ Assuming that you already have CUDA 10.1 installed, here is a full script for se
 conda create -n openmmlab python=3.7 -y
 conda activate openmmlab
 
-conda install pytorch==1.7.0 torchvision==0.8.0 torchaudio==0.7.0 cudatoolkit=10.1 -c pytorch
+conda install pytorch==1.7.0 torchvision==0.8.0 cudatoolkit=10.1 -c pytorch
 
 # install the latest mmcv
 pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu101/torch1.7.0/index.html
 
-# install mmclassification mmdetection
-pip install mmcls mmdet
+# install mmdetection
+pip install mmdet
 
 # install mmrotate
 git clone https://github.com/open-mmlab/mmrotate.git
