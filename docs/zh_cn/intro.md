@@ -19,13 +19,13 @@
 
 ### 术语
 旋转目标检测与通用目标检测最大的不同就是用旋转框标注来代替水平框标注，它们的定义如下：
-- 水平框: 宽沿x轴方向，高沿y轴方向的矩形。通常可以用左上角以及右下角两个顶点的坐标表示
-`(x_lt, y_lt, x_rb, y_rb)`，也可以用中心点坐标以及宽和高表示
+- 水平框: 宽沿x轴方向，高沿y轴方向的矩形。通常可以用四个顶点的坐标表示
+`(x_i, y_i)`  (i = 1, 2, 3, 4)，也可以用中心点坐标以及宽和高表示
 `(x_center, y_center, width, height)`。
-- 旋转框: 由水平框绕中心点旋转一个角度`angle`得到，通过添加一个弧度参数来表示
+- 旋转框: 由水平框绕中心点旋转一个角度`angle`得到，通过添加一个弧度参数得到其旋转框定义法
 `(x_center, y_center, width, height, theta)`。其中，`theta = angle * np.pi / 180`。
 当旋转的角度为90°的倍数时，旋转框退化为水平框。标注软件导出的旋转框标注通常采用多边形定义法
-`(xr_1, yr_1, xr_2, yr_2, xr_3, yr_3, xr_4, yr_4)`，在训练时需要转换为旋转框表示法。
+`(xr_i, yr_i)` (i = 1, 2, 3, 4)，在训练时需要转换为旋转框定义法。
 
 图像空间采用右手坐标系`(y，x)`，其中 y 是`上->下`，x 是`左->右`。对于一个旋转框存在2种相反
 的旋转方向，即顺时针（CW）和逆时针（CCW）。
@@ -42,12 +42,16 @@ v
 y (pi/2 rad)
 ```
 - CW 的旋转矩阵
+```
+|cos(theta) -sin(theta)|
+|sin(theta)  cos(theta)|
+```
 
-$$\begin{matrix}
-cos(theta)&-sin(theta) \\
-sin(theta)&cos(theta) \\
-\end{matrix}$$
-
+- CW 的旋转变换
+```
+xr_i = -sin(theta) * (y_i - y_c) + cos(theta) * (x_i - x_c) + x_c
+yr_i = cos(theta) * (y_i - y_c) + sin(theta) * (x_i - x_c) + y_c
+```
 
 - CCW 的示意图
 ```
@@ -60,8 +64,17 @@ sin(theta)&cos(theta) \\
 v
 y (-pi/2 rad)
 ```
+- CCW 的旋转矩阵
+```
+| cos(theta) sin(theta)|
+|-sin(theta) cos(theta)|
+```
 
-
+- CCW 的旋转变换
+```
+xr_i = sin(theta) * (y_i - y_c) + cos(theta) * (x_i - x_c) + x_c
+yr_i = cos(theta) * (y_i - y_c) - sin(theta) * (x_i - x_c) + y_c
+```
 
 由于角度定义范围的不同，逐渐衍生出如下3种不同的旋转框定义法：
   - ***D<sub>oc</sub>*** : OpenCV 定义法，。
