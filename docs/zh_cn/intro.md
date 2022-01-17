@@ -9,12 +9,7 @@
 水平框在一些细分领域上已经无法满足研究人员的需求。通过重新定义目标表示形式以及增加回归自由度数量
 的操作来实现旋转矩形框、四边形甚至任意形状检测，我们称之为旋转目标检测。如何更加高效地进行高精度
 的旋转目标检测已成为当下的研究热点。下面列举一些旋转目标检测已经被应用或者有巨大潜力的领域：
-- 人脸识别
-- 场景文字
-- 遥感影像
-- 自动驾驶
-- 医学图像
-- 机器人抓取
+人脸识别、场景文字、遥感影像、自动驾驶、医学图像、机器人抓取等。
 
 
 ### 术语
@@ -23,38 +18,17 @@
 `(x_i, y_i)`  (i = 1, 2, 3, 4)，也可以用中心点坐标以及宽和高表示
 `(x_center, y_center, width, height)`。
 - 旋转框: 由水平框绕中心点旋转一个角度`angle`得到，通过添加一个弧度参数得到其旋转框定义法
-`(x_center, y_center, width, height, theta)`。其中，`theta = angle * np.pi / 180`。
-当旋转的角度为90°的倍数时，旋转框退化为水平框。标注软件导出的旋转框标注通常采用多边形定义法
-`(xr_i, yr_i)` (i = 1, 2, 3, 4)，在训练时需要转换为旋转框定义法。
+`(x_center, y_center, width, height, theta)`。其中，`theta = angle * pi / 180`，
+单位为`rad`。当旋转的角度为90°的倍数时，旋转框退化为水平框。标注软件导出的旋转框标注通常采用多
+边形定义法`(xr_i, yr_i)` (i = 1, 2, 3, 4)，在训练时需要转换为旋转框定义法。
 
-图像空间采用右手坐标系`(y，x)`，其中 y 是`上->下`，x 是`左->右`。对于一个旋转框存在2种相反
-的旋转方向，即顺时针（CW）和逆时针（CCW）。
+实际上，旋转框既可以由水平框绕在中心点顺时针旋转得到，也可以由水平框绕在中心点逆时针旋转得到。
+旋转方向和坐标系的选择密切相关。图像空间采用右手坐标系`(y，x)`，其中 y 是`上->下`，x 是`左->右`。
+此时存在2种相反的坐标系：
 
-- CW 的示意图
+- 顺时针（CW）坐标系
 ```
-0-------------------> x (0 rad)
-|  A-------------B
-|  |             |
-|  |     box     h
-|  |   angle=0   |
-|  D------w------C
-v
-y (pi/2 rad)
-```
-- CW 的旋转矩阵
-```
-|cos(theta) -sin(theta)|
-|sin(theta)  cos(theta)|
-```
-
-- CW 的旋转变换
-```
-xr_i = -sin(theta) * (y_i - y_c) + cos(theta) * (x_i - x_c) + x_c
-yr_i = cos(theta) * (y_i - y_c) + sin(theta) * (x_i - x_c) + y_c
-```
-
-- CCW 的示意图
-```
+# 示意图
 0-------------------> x (0 rad)
 |  A-------------B
 |  |             |
@@ -63,87 +37,93 @@ yr_i = cos(theta) * (y_i - y_c) + sin(theta) * (x_i - x_c) + y_c
 |  D------w------C
 v
 y (-pi/2 rad)
-```
-- CCW 的旋转矩阵
-```
-| cos(theta) sin(theta)|
-|-sin(theta) cos(theta)|
+
+# 旋转矩阵
+
+|cos(theta) -sin(theta)|
+|sin(theta)  cos(theta)|
+
+# 旋转变换
+
+xr_i = -sin(theta) * (y_i - y_c) + cos(theta) * (x_i - x_c) + x_c
+yr_i = cos(theta) * (y_i - y_c) + sin(theta) * (x_i - x_c) + y_c
 ```
 
-- CCW 的旋转变换
+- 逆时针（CCW）坐标系
 ```
+# 示意图  
+0-------------------> x (0 rad)
+|  A-------------B
+|  |             |
+|  |     box     h
+|  |   angle=0   |
+|  D------w------C
+v
+y (pi/2 rad)
+
+# 旋转矩阵
+| cos(theta) sin(theta)|
+|-sin(theta) cos(theta)|
+
+# 旋转变换
 xr_i = sin(theta) * (y_i - y_c) + cos(theta) * (x_i - x_c) + x_c
 yr_i = cos(theta) * (y_i - y_c) - sin(theta) * (x_i - x_c) + y_c
 ```
 
-由于角度定义范围的不同，逐渐衍生出如下3种不同的旋转框定义法：
-  - ***D<sub>oc</sub>*** : OpenCV 定义法，。
-  - ***D<sub>le135</sub>*** : 长边135°定义法。  
-  - ***D<sub>le90</sub>*** : 长边90°定义法。
+*注：在MMRotate中均使用顺时针坐标系。在MMCV中可以设置坐标系的算子有：box_iou_rotated (默认为`CW`)，nms_rotated (默认为`CW`)，
+RoIAlignRotated (默认为`CCW`)，RiRoIAlignRotated (默认为`CCW`)
 
-实际上，旋转框既可以由水平框绕在中心点顺时针旋转得到，也可以由水平框绕在中心点逆时针旋转得到。前者
-在MMRotate中本文中默认
+
+### 旋转框定义法
+由于 `theta` 定义范围的不同，在旋转目标检测中逐渐衍生出如下3种不同的旋转框定义法：
+- ***D<sub>oc</sub>*** : OpenCV 定义法，`theta∈[-pi / 2, 0)`，与 x 正半轴成锐角的矩形边为 w。
+需要注意的是，从OpenCV-4.5.1开始，`cv2.minAreaRect`接口返回的角度值与老版本互为相反数
+（[参考资料](https://github.com/opencv/opencv/issues/19749)）。为了保持统一，
+我们需要将新版角度转换为老版本角度。
+- ***D<sub>le135</sub>*** : 长边135°定义法，`theta∈[-pi / 4, 3 * pi / 4)` 并且 `w > h`。  
+- ***D<sub>le90</sub>*** : 长边90°定义法，`theta∈[-pi / 2, pi / 2)` 并且 `w > h`。
+
+
+
+
 
 
 ### 评估
-The classes of dataset are split into two group, base classes and novel classes.
-The training set contains all the annotations from base classes and a few annotations from novel classes.
-The novel classes performance (mAP or AP50) on test set are used for evaluating a few shot detector.
+评估 mAP 的代码中涉及 IoU 的计算，可以直接计算旋转框 IoU，也可以将旋转框转换为多边形，然后
+计算多边形 IoU (DOTA在线评估使用的是计算多边形 IoU).
 
-
-
-### 旋转目标检测的基本管道
-We will introduce a simple baseline for all the few shot learning tasks to further illustrate how few shot learning work.
-The most obvious pipeline is fine-tuning.
-It usually consists of two steps: train a model on a large scale dataset and then fine-tune on few shot data.
-For image classification, we first pretrain a model with training set using cross-entropy loss, and then
-we can transfer the backbone and fine tune a new classification head.
-For detection, we can first pretrain a faster-rcnn on training set, and
-then fine tune a new bbox head on a few instances to detect the novel class.
-In many cases, the fine-tuning is a simple but effective strategy for few shot learning.
 
 ## 什么是 MMRotate
 
-MMRotate is the first toolbox that provides a framework for unified implementation and evaluation of few shot classification and detection methods,
-and below is its whole framework:
+MMRotate 是一个为旋转目标检测方法提供统一训练和评估框架的工具箱，以下是其整体框架：:
 
 <div align=center>
 <img src="https://raw.githubusercontent.com/zytx121/image-host/main/imgs/mmrotate-arch.png" width=80%/>
 </div>
 
-MMRotate consists of 4 main parts, `datasets`, `models`, `core` and `apis`.
+MMRotate 包括四个部分, `datasets`, `models`, `core` and `apis`.
 
-- `datasets` is for data loading and data augmentation. In this part,
-we support various datasets for classification and detection algorithms,
-useful data augmentation transforms in `pipelines` for pre-processing image
-and flexible data sampling in `datasetswrappers`.
+- `datasets` 用于数据加载和数据增强。 在这部分,我们支持了各种旋转目标检测数据集，有用的数据
+增强预处理，以及灵活的数据采样。
 
-- `models` contains models and loss functions.
+- `models` 包括模型和损失函数。
 
-- `core` provides evaluation tools and customized hooks for model training and evaluation.
+- `core` 为模型训练和评估提供工具以及角度转换函数。
 
-- `apis` provides high-level APIs for models training, testing, and inference.
+- `apis` 为模型训练、测试和推理提供高级API。
 
 ## 如何使用教程
 
-Here is a detailed step-by-step guide to learn more about MMRotate:
+下面是 MMRotate 详细的分步指南:
 
-1. For installation instructions, please see [install](install.md).
+1. 关于安装说明, 请参阅 [安装](install.md).
 
-2. [get_started](get_started.md) is for the basic usage of MMRotate.
+2. [开始](get_started.md) 介绍了 MMRotate 的基本用法.
 
-3. Refer to the below tutorials to dive deeper:
+3. 如果想要更加深入了解 MMRotate，请参阅以下教程:
 
-- Few Shot Classification
-    - [Overview](classification/overview.md)
-    - [Config](classification/customize_config.md)
-    - [Customize Dataset](classification/customize_dataset.md)
-    - [Customize Model](classification/customize_models.md)
-    - [Customize Runtime](classification/customize_runtime.md)
 
-- Few Shot Detection
-    - [Overview](detection/overview.md)
-    - [Config](detection/customize_config.md)
-    - [Customize Dataset](detection/customize_dataset.md)
-    - [Customize Model](detection/customize_models.md)
-    - [Customize Runtime](detection/customize_runtime.md)
+- [配置](tutorials/customize_config.md)
+- [自定义数据集](tutorials/customize_dataset.md)
+- [自定义模型](tutorials/customize_models.md)
+- [自定义运行时](tutorials/customize_runtime.md)
