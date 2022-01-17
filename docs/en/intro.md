@@ -1,7 +1,7 @@
 # Learn the Basics
 
-This chapter introduces you to the basic conception of few shot learning, and the framework of
-MMFewShot, and provides links to detailed tutorials about MMFewShot.
+This chapter introduces you to the basic conception of rotation detection, and the framework of
+MMRotate, and provides links to detailed tutorials about MMRotate.
 
 ## What is rotation detection
 
@@ -53,14 +53,14 @@ In many cases, the fine-tuning is a simple but effective strategy for few shot l
 
 ## What is MMRotate
 
-MMFewShot is the first toolbox that provides a framework for unified implementation and evaluation of few shot classification and detection methods,
+MMRotate is the first toolbox that provides a framework for unified implementation and evaluation of few shot classification and detection methods,
 and below is its whole framework:
 
 <div align=center>
 <img src="https://raw.githubusercontent.com/zytx121/image-host/main/imgs/mmrotate-arch.png" width=80%/>
 </div>
 
-MMFewShot consists of 4 main parts, `datasets`, `models`, `core` and `apis`.
+MMRotate consists of 4 main parts, `datasets`, `models`, `core` and `apis`.
 
 - `datasets` is for data loading and data augmentation. In this part,
 we support various datasets for classification and detection algorithms,
@@ -75,11 +75,11 @@ and flexible data sampling in `datasetswrappers`.
 
 ## How to Use this Guide
 
-Here is a detailed step-by-step guide to learn more about MMFewShot:
+Here is a detailed step-by-step guide to learn more about MMRotate:
 
 1. For installation instructions, please see [install](install.md).
 
-2. [get_started](get_started.md) is for the basic usage of MMFewShot.
+2. [get_started](get_started.md) is for the basic usage of MMRotate.
 
 3. Refer to the below tutorials to dive deeper:
 

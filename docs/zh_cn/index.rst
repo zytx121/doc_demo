@@ -2,6 +2,13 @@ Welcome to MMRotate's documentation!
 =======================================
 
 .. toctree::
+   :maxdepth: 1
+   :caption: 学习基础知识
+
+   intro.md
+
+
+.. toctree::
    :maxdepth: 2
    :caption: 开始你的第一步
 

@@ -82,7 +82,7 @@ html_theme_options = {
     'menu': [
         {
             'name': 'GitHub',
-            'url': 'https://github.com/open-mmlab/mmfewshot'
+            'url': 'https://github.com/open-mmlab/mmrotate'
         },
         {
             'name':

@@ -115,7 +115,7 @@ venv.bak/
 *.pkl.json
 *.log.json
 work_dirs/
-mmfewshot/.mim
+mmrotate/.mim
 
 # Pytorch
 *.pth
