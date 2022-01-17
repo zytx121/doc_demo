@@ -3,7 +3,7 @@
 This chapter introduces you to the basic conception of few shot learning, and the framework of
 MMFewShot, and provides links to detailed tutorials about MMFewShot.
 
-## What is Few Shot Learning
+## What is rotation detection
 
 ### Problem definition
 Few shot learning aims at generalizing to new tasks based on a limited number of samples using prior knowledge.
@@ -20,10 +20,10 @@ In summary, few shot learning focus on two aspects:
 
 
 <div align=center>
-<img src="https://github.com/open-mmlab/mmfewshot/blob/main/resources/demo.png?raw=true" width=80%/>
+<img src="https://raw.githubusercontent.com/zytx121/image-host/main/imgs/difference.png" width=80%/>
 </div>
 
-### Terminologies in few-shot learning
+### Terminologies in rotation detection
 - Training set: every class in the training set has many samples, and it is big enough for training a deep neural network.
 - Support set: a small set of labeled images and all the classes do not exist in the training set.
 - Query set: unlabeled images to predict and share the same classes with support set.
@@ -35,20 +35,13 @@ In summary, few shot learning focus on two aspects:
 
 
 ### Evaluation
-#### Few shot classification
-The classes of a dataset will be divided into three disjoint groups: train, test and val set.
-The evaluation also called meta test, will randomly sample (N way x K shot) labeled support images + Q unlabeled
-query images from the test set to form a task and get the prediction accuracy of query images in that task.
-Usually, meta test will repeatedly sample numerous tasks to get a sufficient evaluation and
-calculate the mean and std of accuracy from all tasks.
-#### Few shot detection
 The classes of dataset are split into two group, base classes and novel classes.
 The training set contains all the annotations from base classes and a few annotations from novel classes.
 The novel classes performance (mAP or AP50) on test set are used for evaluating a few shot detector.
 
 
 
-### The basic pipeline for few shot learning
+### The basic pipeline for rotation detection
 We will introduce a simple baseline for all the few shot learning tasks to further illustrate how few shot learning work.
 The most obvious pipeline is fine-tuning.
 It usually consists of two steps: train a model on a large scale dataset and then fine-tune on few shot data.
@@ -58,13 +51,13 @@ For detection, we can first pretrain a faster-rcnn on training set, and
 then fine tune a new bbox head on a few instances to detect the novel class.
 In many cases, the fine-tuning is a simple but effective strategy for few shot learning.
 
-## What is MMFewShot
+## What is MMRotate
 
 MMFewShot is the first toolbox that provides a framework for unified implementation and evaluation of few shot classification and detection methods,
 and below is its whole framework:
 
 <div align=center>
-<img src="https://user-images.githubusercontent.com/15669896/143182168-e2b0a3b8-4dce-4e44-b134-a2577c8290c5.png" width=80%/>
+<img src="https://raw.githubusercontent.com/zytx121/image-host/main/imgs/mmrotate-arch.png" width=80%/>
 </div>
 
 MMFewShot consists of 4 main parts, `datasets`, `models`, `core` and `apis`.
