@@ -37,8 +37,8 @@ We follow the below style to name config files. Contributors are advised to foll
 
 `{xxx}` is required field and `[yyy]` is optional.
 
-- `{model}`: model type like `rfaster_rcnn`, `rretinanet`, etc.
-- `[model setting]`: specific setting for some model, like `hbb` for `rretinanet`, etc.
+- `{model}`: model type like `rotated_faster_rcnn`, `rotated_retinanet`, etc.
+- `[model setting]`: specific setting for some model, like `hbb` for `rotated_retinanet`, etc.
 - `{backbone}`: backbone type like `r50` (ResNet-50), `swin_tiny` (SWIN-tiny).
 - `{neck}`: neck type like `fpn`,  `refpn`.
 - `[norm_setting]`: `bn` (Batch Normalization) is used unless specified, other norm layer type could be `gn` (Group Normalization), `syncbn` (Synchronized Batch Normalization).
@@ -48,15 +48,15 @@ We follow the below style to name config files. Contributors are advised to foll
 - `{dataset}`: dataset like `dota`.
 - `{angle version}`: like `v1`, `v2` or `v3`.
 
-## An example of RRetinaNet
+## An example of RotatedetinaNet
 
 To help the users have a basic idea of a complete config and the modules in a modern detection system,
-we make brief comments on the config of RRetinaNet using ResNet50 and FPN as the following. For more
+we make brief comments on the config of RotatedRetinaNet using ResNet50 and FPN as the following. For more
 detailed usage and the corresponding alternative for each modules, please refer to the API documentation.
 ```python
 angle_version = 'v1'  # The angle version
 model = dict(
-    type='RRetinaNet',  # The name of detector
+    type='RotatedRetinaNet',  # The name of detector
     backbone=dict(  # The config of backbone
         type='ResNet',  # The type of the backbone
         depth=50,  # The depth of backbone
@@ -78,14 +78,14 @@ model = dict(
         add_extra_convs='on_input',  # It specifies the source feature map of the extra convs
         num_outs=5),  # The number of output scales
     bbox_head=dict(
-        type='RRetinaHead',# The type of bbox head is 'RRetinaHead'
+        type='RotatedRetinaHead',# The type of bbox head is 'RRetinaHead'
         num_classes=15,  # Number of classes for classification
         in_channels=256,  # Input channels for bbox head
         stacked_convs=4,  # Number of stacking convs of the head
         feat_channels=256,  # Number of hidden channels
         assign_by_circumhbbox='v1',  # The angle version of obb2hbb
         anchor_generator=dict(  # The config of anchor generator
-            type='RAnchorGenerator',  # The type of anchor generator
+            type='RotatedAnchorGenerator',  # The type of anchor generator
             octave_base_scale=4,  # The base scale of octave.
             scales_per_octave=3,  #  Number of scales for each octave.
             ratios=[1.0, 0.5, 2.0],  # The ratio between height and width.
@@ -122,7 +122,7 @@ model = dict(
         nms=dict(iou_thr=0.1), # NMS threshold
         max_per_img=2000))  # The number of boxes to be kept after NMS.
 dataset_type = 'DOTADataset'  # Dataset type, this will be used to define the dataset
-data_root = '/cluster/home/it_stu198/main/datasets/split_1024_dota1_0/'  # Root path of data
+data_root = '../datasets/split_1024_dota1_0/'  # Root path of data
 img_norm_cfg = dict(  # Image normalization config to normalize the input images
     mean=[123.675, 116.28, 103.53],  # Mean values used to pre-training the pre-trained backbone models
     std=[58.395, 57.12, 57.375],  # Standard variance used to pre-training the pre-trained backbone models
@@ -173,9 +173,9 @@ data = dict(
     train=dict(  # Train dataset config
         type='DOTADataset',  # Type of dataset
         ann_file=
-        '/cluster/home/it_stu198/main/datasets/split_1024_dota1_0/trainval/annfiles/',  # Path of annotation file
+        '../datasets/split_1024_dota1_0/trainval/annfiles/',  # Path of annotation file
         img_prefix=
-        '/cluster/home/it_stu198/main/datasets/split_1024_dota1_0/trainval/images/',  # Prefix of image path
+        '../datasets/split_1024_dota1_0/trainval/images/',  # Prefix of image path
         pipeline=[  # pipeline, this is passed by the train_pipeline created before.
             dict(type='LoadImageFromFile'),
             dict(type='LoadAnnotations', with_bbox=True),
@@ -194,9 +194,9 @@ data = dict(
     val=dict(  # Validation dataset config
         type='DOTADataset',
         ann_file=
-        '/cluster/home/it_stu198/main/datasets/split_1024_dota1_0/trainval/annfiles/',
+        '../datasets/split_1024_dota1_0/trainval/annfiles/',
         img_prefix=
-        '/cluster/home/it_stu198/main/datasets/split_1024_dota1_0/trainval/images/',
+        '../datasets/split_1024_dota1_0/trainval/images/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(
@@ -219,9 +219,9 @@ data = dict(
     test=dict(  # Test dataset config, modify the ann_file for test-dev/test submission
         type='DOTADataset',
         ann_file=
-        '/cluster/home/it_stu198/main/datasets/split_1024_dota1_0/test/images/',
+        '../datasets/split_1024_dota1_0/test/images/',
         img_prefix=
-        '/cluster/home/it_stu198/main/datasets/split_1024_dota1_0/test/images/',
+        '../datasets/split_1024_dota1_0/test/images/',
         pipeline=[  # Pipeline is passed by test_pipeline created before
             dict(type='LoadImageFromFile'),
             dict(
@@ -251,7 +251,7 @@ optimizer = dict(  # Config used to build optimizer
     weight_decay=0.0001)  # Weight decay of SGD
 optimizer_config = dict(  # Config used to build the optimizer hook
     grad_clip=dict(
-        max_norm=35, 
+        max_norm=35,
         norm_type=2))
 lr_config = dict(  # Learning rate scheduler config used to register LrUpdater hook
     policy='step',  # The policy of scheduler
@@ -275,7 +275,7 @@ log_level = 'INFO'  # The level of logging.
 load_from = None  # load models as a pre-trained model from a given path. This will not resume training.
 resume_from = None  # Resume checkpoints from a given path, the training will be resumed from the epoch when the checkpoint's is saved.
 workflow = [('train', 1)]  # Workflow for runner. [('train', 1)] means there is only one workflow and the workflow named 'train' is executed once. The workflow trains the model by 12 epochs according to the total_epochs.
-work_dir = './work_dirs/rretinanet_hbb_r50_fpn_1x_dota_v1'  # Directory to save the model checkpoints and logs for the current experiments.
+work_dir = './work_dirs/rotated_retinanet_hbb_r50_fpn_1x_dota_v1'  # Directory to save the model checkpoints and logs for the current experiments.
 ```
 
 ## FAQ
@@ -289,7 +289,7 @@ For example, we would like to use offline multi scale strategy to train a RoI-Tr
 ```python
 _base_ = ['./roi_trans_r50_fpn_1x_dota_v3.py']
 
-data_root = '/cluster/home/it_stu198/main/datasets/split_ms_dota1_0/'
+data_root = '../datasets/split_ms_dota1_0/'
 angle_version = 'v3'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)

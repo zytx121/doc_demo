@@ -1,6 +1,6 @@
 ## 依赖
 
-- Linux 或 Windows
+- Linux & Windows
 - Python 3.7+
 - PyTorch 1.6+
 - CUDA 9.2+

@@ -23,21 +23,21 @@ Examples:
 Inference rotated RetinaNet on DOTA-1.0 dataset. (Please change the [data_root](../configs/_base_/datasets/dota1_0.py) firstly.)
 ```shell
 python ./tools/test.py \
-  configs/rretinanet/rretinanet_obb_r50_fpn_1x_dota_v3.py \
+  configs/rotated_retinanet/rotated_retinanet_obb_r50_fpn_1x_dota_v3.py \
   checkpoints/SOME_CHECKPOINT.pth --eval mAP
 ```
 
 You can also visualize the results.
 ```shell
 python ./tools/test.py \
-  configs/rretinanet/rretinanet_obb_r50_fpn_1x_dota_v3.py \
+  configs/rotated_retinanet/rotated_retinanet_obb_r50_fpn_1x_dota_v3.py \
   checkpoints/SOME_CHECKPOINT.pth \
   --show-dir work_dirs/vis
 ```
 Further, you can also generate compressed files for online submission.
 ```shell
 python ./tools/test.py  \
-  configs/rretinanet/rretinanet_obb_r50_fpn_1x_dota_v3.py \
+  configs/rotated_retinanet/rotated_retinanet_obb_r50_fpn_1x_dota_v3.py \
   checkpoints/SOME_CHECKPOINT.pth 1 --format-only \
   --eval-options submission_dir=work_dirs/Task1_results
 ```

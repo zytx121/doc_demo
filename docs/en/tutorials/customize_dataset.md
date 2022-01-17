@@ -2,7 +2,7 @@
 
 ## Support new data format
 
-To support a new data format, you can convert them to existing formats (DOTA format). You could choose to convert them offline (before training by a script) or online (implement a new dataset and do the conversion at training). 
+To support a new data format, you can convert them to existing formats (DOTA format). You could choose to convert them offline (before training by a script) or online (implement a new dataset and do the conversion at training).
 In MMRotate, we recommend to convert the data into DOTA formats and do the conversion offline, thus you only need to modify the config's data annotation paths and classes after the conversion of your data.
 
 ### Reorganize new data formats to existing format
@@ -17,7 +17,7 @@ The annotation txt files in DOTA format:
 ...
 ```
 
-Each line represents an object and records it as a 10-dimensional array `A`. 
+Each line represents an object and records it as a 10-dimensional array `A`.
 - `A[0:8]`: Polygons with format `(x1, y1, x2, y2, x3, y3, x4, y4)`.
 - `A[8]`: Category.
 - `A[9]`: Difficulty.
@@ -41,7 +41,7 @@ In `configs/my_custom_config.py`:
 ```python
 
 # the new config inherits the base configs to highlight the necessary modification
-_base_ = './rretinanet_hbb_r50_fpn_1x_dota_v1'
+_base_ = './rotated_retinanet_hbb_r50_fpn_1x_dota_v1'
 
 # 1. dataset settings
 dataset_type = 'DOTADataset'
@@ -71,7 +71,7 @@ data = dict(
 # 2. model settings
 model = dict(
     bbox_head=dict(
-        type='RRetinaHead',
+        type='RotatedRetinaHead',
         # explicitly over-write all the `num_classes` field from default 15 to 5.
         num_classes=15))
 ```
