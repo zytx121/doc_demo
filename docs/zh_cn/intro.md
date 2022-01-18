@@ -127,7 +127,7 @@ MMRotate同时支持上述三种旋转框定义法，可以通过配置文件灵
 
 值得一提的是，在4.5.1之前的版本中，`cv2.minAreaRect`的返回值为`[-90°, 0°)`
 （[参考资料](https://github.com/opencv/opencv/issues/19749)）。为了区分，将老版本的
-OpenCV表示法记作 {math}`D_{oc}^{old}`。 两者的转换关系如下：
+OpenCV定义法记作 {math}`D_{oc}^{old}`。 两者的转换关系如下：
 ```{math}
 D_{oc}\left( h_{oc},w_{oc},\theta _{oc} \right) =\begin{cases}
 	D_{oc}^{old}\left( w_{oc}^{old},h_{oc}^{old},\theta _{oc}^{old}+\pi /2 \right) \text{，}\theta _{oc}^{old}\in \left( -\pi /2,0 \right)\\
