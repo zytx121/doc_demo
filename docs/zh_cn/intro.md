@@ -22,6 +22,8 @@
 单位为`rad`。当旋转的角度为90°的倍数时，旋转框退化为水平框。标注软件导出的旋转框标注通常采用多
 边形定义法`(xr_i, yr_i)` (i = 1, 2, 3, 4)，在训练时需要转换为旋转框定义法。
 
+*注：在 MMRotate 中，角度参数的单位均为弧度。*
+
 实际上，旋转框既可以由水平框绕在中心点顺时针旋转得到，也可以由水平框绕在中心点逆时针旋转得到。
 旋转方向和坐标系的选择密切相关。图像空间采用右手坐标系`(y，x)`，其中 y 是`上->下`，x 是`左->右`。
 此时存在2种相反的旋转方向：
@@ -71,15 +73,15 @@ yr_i = cos(theta) * (y_i - y_c) - sin(theta) * (x_i - x_c) + y_c
 ```
 
 *注：在MMRotate中均使用顺时针坐旋转。在MMCV中可以设置旋转方向的算子有：box_iou_rotated (默认为`CW`)，nms_rotated (默认为`CW`)，
-RoIAlignRotated (默认为`CCW`)，RiRoIAlignRotated (默认为`CCW`)。
+RoIAlignRotated (默认为`CCW`)，RiRoIAlignRotated (默认为`CCW`)。*
 
 
 ### 旋转框定义法
 由于 `theta` 定义范围的不同，在旋转目标检测中逐渐衍生出如下3种不同的旋转框定义法：
 - ***D<sub>oc</sub>*** : OpenCV 定义法，`theta∈[-pi / 2, 0)`，与 x 正半轴成锐角的矩形边为 w。
 该定义法源于OpenCV中的`cv2.minAreaRect`函数，其返回值为`[-90, 0)`。需要注意的是，从4.5.1版本开始，
-`cv2.minAreaRect`的返回值变为了`[-90, 0)`（[参考资料](https://github.com/opencv/opencv/issues/19749)）。
-为了保持统一，需要将新版角度转换为老版本角度。
+`cv2.minAreaRect`的返回值变为了`(0, 90]`（[参考资料](https://github.com/opencv/opencv/issues/19749)）。
+为了保持统一，需要将新版角度先转换为老版本角度，再转为弧度。
 - ***D<sub>le135</sub>*** : 长边135°定义法，`theta∈[-pi / 4, 3 * pi / 4)` 并且 `w > h`。  
 - ***D<sub>le90</sub>*** : 长边90°定义法，`theta∈[-pi / 2, pi / 2)` 并且 `w > h`。
 
