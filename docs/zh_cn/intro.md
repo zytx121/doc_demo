@@ -24,9 +24,9 @@
 
 实际上，旋转框既可以由水平框绕在中心点顺时针旋转得到，也可以由水平框绕在中心点逆时针旋转得到。
 旋转方向和坐标系的选择密切相关。图像空间采用右手坐标系`(y，x)`，其中 y 是`上->下`，x 是`左->右`。
-此时存在2种相反的坐标系：
+此时存在2种相反的旋转方向：
 
-- 顺时针（CW）坐标系
+- 顺时针（CW）旋转
 ```
 # 示意图
 0-------------------> x (0 rad)
@@ -36,7 +36,7 @@
 |  |   angle=0   |
 |  D------w------C
 v
-y (-pi/2 rad)
+y (pi/2 rad)
 
 # 旋转矩阵
 
@@ -49,7 +49,7 @@ xr_i = -sin(theta) * (y_i - y_c) + cos(theta) * (x_i - x_c) + x_c
 yr_i = cos(theta) * (y_i - y_c) + sin(theta) * (x_i - x_c) + y_c
 ```
 
-- 逆时针（CCW）坐标系
+- 逆时针（CCW）旋转
 ```
 # 示意图  
 0-------------------> x (0 rad)
@@ -59,7 +59,7 @@ yr_i = cos(theta) * (y_i - y_c) + sin(theta) * (x_i - x_c) + y_c
 |  |   angle=0   |
 |  D------w------C
 v
-y (pi/2 rad)
+y (-pi/2 rad)
 
 # 旋转矩阵
 | cos(theta) sin(theta)|
@@ -70,21 +70,18 @@ xr_i = sin(theta) * (y_i - y_c) + cos(theta) * (x_i - x_c) + x_c
 yr_i = cos(theta) * (y_i - y_c) - sin(theta) * (x_i - x_c) + y_c
 ```
 
-*注：在MMRotate中均使用顺时针坐标系。在MMCV中可以设置坐标系的算子有：box_iou_rotated (默认为`CW`)，nms_rotated (默认为`CW`)，
-RoIAlignRotated (默认为`CCW`)，RiRoIAlignRotated (默认为`CCW`)
+*注：在MMRotate中均使用顺时针坐旋转。在MMCV中可以设置旋转方向的算子有：box_iou_rotated (默认为`CW`)，nms_rotated (默认为`CW`)，
+RoIAlignRotated (默认为`CCW`)，RiRoIAlignRotated (默认为`CCW`)。
 
 
 ### 旋转框定义法
 由于 `theta` 定义范围的不同，在旋转目标检测中逐渐衍生出如下3种不同的旋转框定义法：
 - ***D<sub>oc</sub>*** : OpenCV 定义法，`theta∈[-pi / 2, 0)`，与 x 正半轴成锐角的矩形边为 w。
-需要注意的是，从OpenCV-4.5.1开始，`cv2.minAreaRect`接口返回的角度值与老版本互为相反数
-（[参考资料](https://github.com/opencv/opencv/issues/19749)）。为了保持统一，
-我们需要将新版角度转换为老版本角度。
+该定义法源于OpenCV中的`cv2.minAreaRect`函数，其返回值为`[-90, 0)`。需要注意的是，从4.5.1版本开始，
+`cv2.minAreaRect`的返回值变为了`[-90, 0)`（[参考资料](https://github.com/opencv/opencv/issues/19749)）。
+为了保持统一，需要将新版角度转换为老版本角度。
 - ***D<sub>le135</sub>*** : 长边135°定义法，`theta∈[-pi / 4, 3 * pi / 4)` 并且 `w > h`。  
 - ***D<sub>le90</sub>*** : 长边90°定义法，`theta∈[-pi / 2, pi / 2)` 并且 `w > h`。
-
-
-
 
 
 
