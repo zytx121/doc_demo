@@ -125,6 +125,8 @@ y_{center}+0.5w\sin\alpha-0.5h\cos\alpha\end{pmatrix}
 <img src="https://raw.githubusercontent.com/zytx121/image-host/main/imgs/angle_def.png" width=100%/>
 </div>
 
+三种定义法之间的转换关系在MMRotate内部并不涉及，因此不多做介绍。如果想了解更多的细节，可以参考这篇[博客](https://zhuanlan.zhihu.com/p/459018810)。
+
 ```{note}
 MMRotate同时支持上述三种旋转框定义法，可以通过配置文件灵活切换。
 ```
@@ -155,8 +157,6 @@ D_{oc}\left( h_{oc},w_{oc},\theta _{oc} \right) =\begin{cases}
 ```{note}
 不管您使用的 OpenCV 版本是多少, MMRotate 都会将 OpenCV 定义法的 theta 转换为 (0, pi / 2]。
 ```
-
-如果想了解更多细节，可以参考这篇博客：[关于旋转框定义的一些理解和感想](https://zhuanlan.zhihu.com/p/459018810)
 
 ### 评估
 评估 mAP 的代码中涉及 IoU 的计算，可以直接计算旋转框 IoU，也可以将旋转框转换为多边形，然后
