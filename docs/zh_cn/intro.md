@@ -116,19 +116,27 @@ y_{center}+0.5w\sin\alpha-0.5h\cos\alpha\end{pmatrix}
 
 ### 旋转框定义法
 由于 `theta` 定义范围的不同，在旋转目标检测中逐渐衍生出如下3种不同的旋转框定义法：
-- ***D<sub>oc</sub>*** : OpenCV 定义法，`theta∈(0, pi / 2]`，与 x 正半轴成锐角的矩形边为 w。
-该定义法源于OpenCV中的`cv2.minAreaRect`函数，其返回值为`(0, 90]`。
-- ***D<sub>le135</sub>*** : 长边135°定义法，`theta∈[-pi / 4, 3 * pi / 4)` 并且 `w > h`。 
-- ***D<sub>le90</sub>*** : 长边90°定义法，`theta∈[-pi / 2, pi / 2)` 并且 `w > h`。
+- ***D<sub>oc</sub>*** : OpenCV 定义法，`angle∈(0, 90°]`，`theta∈(0, pi / 2]`，与 x 正半轴成锐角的矩形边为 w。
+该定义法源于OpenCV中的`cv2.minAreaRect`函数，其返回值为`(0, 90°]`。
+- ***D<sub>le135</sub>*** : 长边135°定义法，`angle∈(-45°, 135°]`，`theta∈[-pi / 4, 3 * pi / 4)` 并且 `w > h`。 
+- ***D<sub>le90</sub>*** : 长边90°定义法，`angle∈(-90°, 90°]`，`theta∈[-pi / 2, pi / 2)` 并且 `w > h`。
 
+```{note}
+MMRotate同时支持上述三种旋转框定义法，可以通过配置文件灵活切换。
+```
 
-值得一提的是，在4.5.1之前的版本中，`cv2.minAreaRect`的返回值为`[-90, 0)`
+值得一提的是，在4.5.1之前的版本中，`cv2.minAreaRect`的返回值为`[-90°, 0°)`
 （[参考资料](https://github.com/opencv/opencv/issues/19749)）。为了区分，将老版本的
 OpenCV表示法记作 ***D<sub>xx</sub>***。 两者的转换关系如下：
 ```{math}
 D_{oc}\left( h_{oc},w_{oc},\theta _{oc} \right) =\begin{cases}
-	D_{oc}^{old}\left( w_{oc}^{old},h_{oc}^{old},\theta _{oc}^{old}+90\degree \right) \text{，}\theta _{oc}^{old}\in \left( -90\degree,0\degree \right)\\
-	D_{oc}^{old}\left( h_{oc}^{old},w_{oc}^{old},\theta _{oc}^{old}+180\degree \right) \text{，}\theta _{oc}^{old}=-90\degree\\
+	D_{oc}^{old}\left( w_{oc}^{old},h_{oc}^{old},\theta _{oc}^{old}+\pi /2 \right) \text{，}\theta _{oc}^{old}\in \left( -\pi /2,0 \right)\\
+	D_{oc}^{old}\left( h_{oc}^{old},w_{oc}^{old},\theta _{oc}^{old}+\pi \right) \text{，}\theta _{oc}^{old}=-\pi /2\\
+\end{cases}
+\\
+D_{oc}^{old}\left( h_{oc}^{old},w_{oc}^{old},\theta _{oc}^{old} \right) =\begin{cases}
+	D_{oc}\left( w_{oc},h_{oc},\theta _{oc}-\pi /2 \right) \text{，}\theta _{oc}^{old}\in \left( 0,\pi /2 \right)\\
+	D_{oc}\left( h_{oc},w_{oc},\theta _{oc}-\pi \right) \text{，}\theta _{oc}^{old}=\pi /2\\
 \end{cases}
 ```
 如下图所示:
@@ -139,9 +147,7 @@ D_{oc}\left( h_{oc},w_{oc},\theta _{oc} \right) =\begin{cases}
 
 为了保持统一，在MMRotate中不管您使用哪个版本的OpenCV,都会将其转换为`(0, 90]`。
 
-```{note}
-MMRotate同时支持上述三种旋转框定义法，可以通过配置文件灵活切换。
-```
+
 
 ### 评估
 评估 mAP 的代码中涉及 IoU 的计算，可以直接计算旋转框 IoU，也可以将旋转框转换为多边形，然后
