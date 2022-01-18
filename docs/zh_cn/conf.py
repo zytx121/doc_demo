@@ -44,6 +44,7 @@ extensions = [
     'sphinx.ext.autosectionlabel',
     'sphinx_copybutton',
     'sphinx_markdown_tables',
+    'myst_parser'
 ]
 
 autodoc_mock_imports = ['matplotlib', 'mmrotate.version', 'mmcv.ops']

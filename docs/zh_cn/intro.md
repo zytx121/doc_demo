@@ -74,17 +74,16 @@ xr_i = sin(theta) * (y_i - y_c) + cos(theta) * (x_i - x_c) + x_c
 yr_i = cos(theta) * (y_i - y_c) - sin(theta) * (x_i - x_c) + y_c
 ```
 ```{note}
-在MMRotate中均使用顺时针（CW）旋转。在MMCV中可以设置旋转方向的算子有：box_iou_rotated (默认为`CW`)，nms_rotated (默认为`CW`)，
-RoIAlignRotated (默认为`CCW`)，RiRoIAlignRotated (默认为`CCW`)。*
+在MMRotate中均使用顺时针（CW）旋转。在MMCV中可以设置旋转方向的算子有：box_iou_rotated (默认为`CW`)，nms_rotated (默认为`CW`)，RoIAlignRotated (默认为`CCW`)，RiRoIAlignRotated (默认为`CCW`)。
 ```
 
 ### 旋转框定义法
 由于 `theta` 定义范围的不同，在旋转目标检测中逐渐衍生出如下3种不同的旋转框定义法：
-- ***D<sub>oc</sub>*** : OpenCV 定义法，`theta∈[-pi / 2, 0)`，与 x 正半轴成锐角的矩形边为 w。
-该定义法源于OpenCV中的`cv2.minAreaRect`函数，其返回值为`[-90, 0)`。需要注意的是，从4.5.1版本开始，
-`cv2.minAreaRect`的返回值变为了`(0, 90]`（[参考资料](https://github.com/opencv/opencv/issues/19749)）。
-为了保持统一，需要将新版角度先转换为老版本角度，再转为弧度。
-- ***D<sub>le135</sub>*** : 长边135°定义法，`theta∈[-pi / 4, 3 * pi / 4)` 并且 `w > h`。  
+- ***D<sub>oc</sub>*** : OpenCV 定义法，`theta∈(0, pi / 2]`，与 x 正半轴成锐角的矩形边为 w。
+该定义法源于OpenCV中的`cv2.minAreaRect`函数，其返回值为`(0, 90]`。需要注意的是，在4.5.1之前的版本中，
+`cv2.minAreaRect`的返回值为`[-90, 0)`（[参考资料](https://github.com/opencv/opencv/issues/19749)）。
+为了保持统一，在MMRotate中均采用`(0, 90]`。
+- ***D<sub>le135</sub>*** : 长边135°定义法，`theta∈[-pi / 4, 3 * pi / 4)` 并且 `w > h`。 
 - ***D<sub>le90</sub>*** : 长边90°定义法，`theta∈[-pi / 2, pi / 2)` 并且 `w > h`。
 
 
