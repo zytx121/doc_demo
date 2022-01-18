@@ -6,54 +6,198 @@ MMRotate, and provides links to detailed tutorials about MMRotate.
 ## What is rotation detection
 
 ### Problem definition
-Few shot learning aims at generalizing to new tasks based on a limited number of samples using prior knowledge.
-The prior knowledge usually refers to a large scale training set that has many classes and samples,
-while the samples in new tasks are never seen in the training set.
-For example, in few shot image classification, a pre-trained model only can see
-five bird images (each class has one image and doesn't exist in the pretrained dataset) and
-predict the class of bird in the query image.
-Another example in few shot detection is that a detector needs to detect the new categories based on a few instances.
+Benefiting from the vigorous development of universal detection, most current
+rotation detection models are based on classic universal detectors.
+With the development of detection tasks, horizontal boxes have been unable to
+meet the needs of researchers in some subdivisions. We call it rotating object
+detection by redefining the object representation and increasing the number of
+regression degrees of freedom to achieve rotated rectangle, quadrilateral, and
+even arbitrary shape detection. Performing high-precision rotation detection
+more efficiently has become a current research hotspot. The following areas are
+where rotation detection has been applied or has great potential: face
+recognition, scene text, remote sensing, self-driving, medical,
+robotic grasping, etc.
 
-In summary, few shot learning focus on two aspects:
-- how to embed prior knowledge into models (pre-train with large scale dataset)
-- how to transfer knowledge to adapt to new tasks (learn on a few labeled samples).
 
+### What is rotated box
+
+The most notable difference between rotation detection and generic detection is
+the replacement of horizontal box annotations with rotated box annotations.
+They are defined as follows:
+- Horizontal box: A rectangle with the width along the x-axis and height along
+the y-axis. Usually, it can be represented by the coordinates of 2 diagonal 
+vertices `(x_i, y_i)`  (i = 1, 2), or it can be represented by the coordinates
+of the center point and the height and width `(x_center, y_center, height, width)`.
+- Rotated box: It is obtained by rotating the horizontal box around the center
+point by an `angle`, and the definition method of its rotated box is
+obtained by adding a radian parameter `(x_center, y_center, height, width, theta)`,
+where `theta = angle * pi / 180`. The unit of `theta` is `rad`. When the rotation
+angle is a multiple of 90°, the rotated box degenerates into a horizontal box.
+The rotated box annotations exported by the annotation software are usually polygons,
+which need to be converted to the rotated box definition method before training.
+
+```{note}
+In MMRotate, angle parameters are in radians.
+```
+
+### Rotation direction
+
+A rotated box can be obtained by rotating a horizontal box clockwise or
+counterclockwise around its center point. The rotation direction is closely
+related to the choice of the coordinate system. The image space adopts the 
+right-handed coordinate system `(y, x)`, where y is `up->down` and x is `left->right`.
+There are two opposite directions of rotation:
+
+- Clockwise（CW）
+
+Schematic of `CW`
+```
+0-------------------> x (0 rad)
+|  A-------------B
+|  |             |
+|  |     box     h
+|  |   angle=0   |
+|  D------w------C
+v
+y (pi/2 rad)
+
+```
+
+Rotation matrix of `CW`
+```{math}
+\begin{pmatrix}
+\cos\alpha & -\sin\alpha \\
+\sin\alpha & \cos\alpha
+\end{pmatrix}
+```
+
+Rotation transformation of `CW`
+```{math}
+P_A=
+\begin{pmatrix} x_A \\ y_A\end{pmatrix}
+=
+\begin{pmatrix} x_{center} \\ y_{center}\end{pmatrix} +
+\begin{pmatrix}\cos\alpha & -\sin\alpha \\
+\sin\alpha & \cos\alpha\end{pmatrix}
+\begin{pmatrix} -0.5w \\ -0.5h\end{pmatrix} \\
+=
+\begin{pmatrix} x_{center}-0.5w\cos\alpha+0.5h\sin\alpha
+\\
+y_{center}-0.5w\sin\alpha-0.5h\cos\alpha\end{pmatrix}
+```
+
+- Counterclockwise（CCW）
+
+Schematic of `CCW`
+```
+0-------------------> x (0 rad)
+|  A-------------B
+|  |             |
+|  |     box     h
+|  |   angle=0   |
+|  D------w------C
+v
+y (-pi/2 rad)
+
+```
+
+Rotation matrix of `CCW`
+```{math}
+\begin{pmatrix}
+\cos\alpha & \sin\alpha \\
+-\sin\alpha & \cos\alpha
+\end{pmatrix}
+```
+
+Rotation transformation of `CCW`
+```{math}
+P_A=
+\begin{pmatrix} x_A \\ y_A\end{pmatrix}
+=
+\begin{pmatrix} x_{center} \\ y_{center}\end{pmatrix} +
+\begin{pmatrix}\cos\alpha & \sin\alpha \\
+-\sin\alpha & \cos\alpha\end{pmatrix}
+\begin{pmatrix} -0.5w \\ -0.5h\end{pmatrix} \\
+=
+\begin{pmatrix} x_{center}-0.5w\cos\alpha-0.5h\sin\alpha
+\\
+y_{center}+0.5w\sin\alpha-0.5h\cos\alpha\end{pmatrix}
+```
+
+The operators that can set the rotation direction in MMCV are:
+- box_iou_rotated (Defaults to `CW`)
+- nms_rotated (Defaults to `CW`)
+- RoIAlignRotated (Defaults to `CCW`)
+- RiRoIAlignRotated (Defaults to `CCW`).
+
+```{note}
+In MMRotate, the rotation direction of the rotated boxes is `CW`.
+```
+
+### Definition of rotated box
+Due to the difference in the definition range of `theta`, the following three
+definitions of the rotated box gradually emerge in rotation detection:
+- {math}`D_{oc^{\prime}}`: OpenCV Definition, `angle∈(0, 90°]`, `theta∈(0, pi / 2]`,
+The angle between the height of the rectangle and the positive semi-axis of x is
+a positive acute angle. This definition comes from the `cv2.minAreaRect` function
+in OpenCV, which returns an angle in the range `(0, 90°]`.
+- {math}`D_{le135}`: Long Edge Definition (135°)，`angle∈[-45°, 135°)`,
+`theta∈[-pi / 4, 3 * pi / 4)` and `height > width`. 
+- {math}`D_{le90}`: Long Edge Definition (90°)，`angle∈[-90°, 90°)`,
+`theta∈[-pi / 2, pi / 2)` and `height > width`.
 
 <div align=center>
-<img src="https://raw.githubusercontent.com/zytx121/image-host/main/imgs/difference.png" width=80%/>
+<img src="https://raw.githubusercontent.com/zytx121/image-host/main/imgs/angle_def.png" width=100%/>
 </div>
 
-### Terminologies in rotation detection
-- Training set: every class in the training set has many samples, and it is big enough for training a deep neural network.
-- Support set: a small set of labeled images and all the classes do not exist in the training set.
-- Query set: unlabeled images to predict and share the same classes with support set.
-- N way K shot: the support set setting, and it means support images contain N classes and
-  each class has K samples.
-  - For classification, there will be NxK support images in a support set.
-  - For detection, there will be NxK support instances in a support set,
-    and the number of images can be less than NxK.
+The conversion relationship between the three definitions is not involved in
+MMRotate, so we will not introduce it much more. Refer to the below
+[blog](https://zhuanlan.zhihu.com/p/459018810) to dive deeper.
+
+```{note}
+MMRotate supports the above three definitions of rotated box simultaneously,
+which can be flexibly switched through the configuration file.
+```
+
+It should be noted that if the OpenCV version is less than 4.5.1, the angle range
+of `cv2.minAreaRect` is between `[-90°, 0°)`. [Reference](https://github.com/opencv/opencv/issues/19749)
+In order to facilitate the distinction, the old version of the OpenCV definition
+is denoted as {math}`D_{oc}`.
+- {math}`D_{oc^{\prime}}` : OpenCV definition, `opencv>=4.5.1`, `angle∈(0, 90°]`, `theta∈(0, pi / 2]`.
+- {math}`D_{oc}` : Old OpenCV definition, `opencv<4.5.1`, `angle∈[-90°, 0°)`, `theta∈[-pi / 2, 0)`.
+<div align=center>
+<img src="https://raw.githubusercontent.com/zytx121/image-host/main/imgs/opencv.png" width=50%/>
+</div>
+
+The conversion relationship between the two OpenCV definitions is as follows:
+```{math}
+D_{oc^{\prime}}\left( h_{oc^{\prime}},w_{oc^{\prime}},\theta _{oc^{\prime}} \right) =\begin{cases}
+	D_{oc}\left( w_{oc},h_{oc},\theta _{oc}+\pi /2 \right) , otherwise\\
+	D_{oc}\left( h_{oc},w_{oc},\theta _{oc}+\pi \right) ,\theta _{oc}=-\pi /2\\
+\end{cases}
+\\
+D_{oc}\left( h_{oc},w_{oc},\theta _{oc} \right) =\begin{cases}
+	D_{oc^{\prime}}\left( w_{oc^{\prime}},h_{oc^{\prime}},\theta _{oc^{\prime}}-\pi /2 \right) , otherwise\\
+	D_{oc^{\prime}}\left( h_{oc^{\prime}},w_{oc^{\prime}},\theta _{oc^{\prime}}-\pi \right) , \theta _{oc^{\prime}}=\pi /2\\
+\end{cases}
+```
+
+```{note}
+Regardless of the OpenCV version you are using, MMRotate will convert the theta
+of the OpenCV definition to (0, pi / 2].
+```
 
 
 ### Evaluation
-The classes of dataset are split into two group, base classes and novel classes.
-The training set contains all the annotations from base classes and a few annotations from novel classes.
-The novel classes performance (mAP or AP50) on test set are used for evaluating a few shot detector.
+The code for evaluating mAP involves the calculation of IoU. We can directly
+calculate the IoU of the rotated boxes or convert the rotated boxes to a polygons
+and then calculate the polygons IoU (DOTA online evaluation uses the calculation
+of polygons IoU).
 
-
-
-### The basic pipeline for rotation detection
-We will introduce a simple baseline for all the few shot learning tasks to further illustrate how few shot learning work.
-The most obvious pipeline is fine-tuning.
-It usually consists of two steps: train a model on a large scale dataset and then fine-tune on few shot data.
-For image classification, we first pretrain a model with training set using cross-entropy loss, and then
-we can transfer the backbone and fine tune a new classification head.
-For detection, we can first pretrain a faster-rcnn on training set, and
-then fine tune a new bbox head on a few instances to detect the novel class.
-In many cases, the fine-tuning is a simple but effective strategy for few shot learning.
 
 ## What is MMRotate
 
-MMRotate is the first toolbox that provides a framework for unified implementation and evaluation of few shot classification and detection methods,
+MMRotate is a toolbox that provides a framework for unified implementation and evaluation of rotation detection,
 and below is its whole framework:
 
 <div align=center>
@@ -63,13 +207,12 @@ and below is its whole framework:
 MMRotate consists of 4 main parts, `datasets`, `models`, `core` and `apis`.
 
 - `datasets` is for data loading and data augmentation. In this part,
-we support various datasets for classification and detection algorithms,
-useful data augmentation transforms in `pipelines` for pre-processing image
-and flexible data sampling in `datasetswrappers`.
+we support various datasets for rotation detection algorithms,
+useful data augmentation transforms in `pipelines` for pre-processing image.
 
 - `models` contains models and loss functions.
 
-- `core` provides evaluation tools and customized hooks for model training and evaluation.
+- `core` provides evaluation tools for model training and evaluation.
 
 - `apis` provides high-level APIs for models training, testing, and inference.
 
@@ -83,16 +226,7 @@ Here is a detailed step-by-step guide to learn more about MMRotate:
 
 3. Refer to the below tutorials to dive deeper:
 
-- Few Shot Classification
-    - [Overview](classification/overview.md)
-    - [Config](classification/customize_config.md)
-    - [Customize Dataset](classification/customize_dataset.md)
-    - [Customize Model](classification/customize_models.md)
-    - [Customize Runtime](classification/customize_runtime.md)
-
-- Few Shot Detection
-    - [Overview](detection/overview.md)
-    - [Config](detection/customize_config.md)
-    - [Customize Dataset](detection/customize_dataset.md)
-    - [Customize Model](detection/customize_models.md)
-    - [Customize Runtime](detection/customize_runtime.md)
+- [Config](detection/customize_config.md)
+- [Customize Dataset](detection/customize_dataset.md)
+- [Customize Model](detection/customize_models.md)
+- [Customize Runtime](detection/customize_runtime.md)

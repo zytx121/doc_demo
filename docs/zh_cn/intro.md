@@ -19,8 +19,8 @@
 `(x_center, y_center, height, width)`。
 - 旋转框: 由水平框绕中心点旋转一个角度`angle`得到，通过添加一个弧度参数得到其旋转框定义法
 `(x_center, y_center, height, width, theta)`。其中，`theta = angle * pi / 180`，
-单位为`rad`。当旋转的角度为90°的倍数时，旋转框退化为水平框。标注软件导出的旋转框标注通常采用多
-边形定义法`(xr_i, yr_i)` (i = 1, 2, 3, 4)，在训练时需要转换为旋转框定义法。
+单位为`rad`。当旋转的角度为90°的倍数时，旋转框退化为水平框。标注软件导出的旋转框标注通常为多边形
+`(xr_i, yr_i)` (i = 1, 2, 3, 4)，在训练时需要转换为旋转框定义法。
 
 ```{note}
 在 MMRotate 中，角度参数的单位均为弧度。
@@ -28,8 +28,8 @@
 
 ### 旋转方向
 
-实际上，旋转框既可以由水平框绕在中心点顺时针旋转得到，也可以由水平框绕在中心点逆时针旋转得到。
-旋转方向和坐标系的选择密切相关。图像空间采用右手坐标系`(y，x)`，其中 y 是`上->下`，x 是`左->右`。
+旋转框可以由水平框绕其中心点顺时针旋转或逆时针旋转得到。旋转方向和坐标系的选择密切相关。
+图像空间采用右手坐标系`(y，x)`，其中 y 是`上->下`，x 是`左->右`。
 此时存在2种相反的旋转方向：
 
 - 顺时针（CW）
@@ -108,16 +108,21 @@ P_A=
 y_{center}+0.5w\sin\alpha-0.5h\cos\alpha\end{pmatrix}
 ```
 
-在MMCV中可以设置旋转方向的算子有：box_iou_rotated (默认为`CW`)，nms_rotated (默认为`CW`)，RoIAlignRotated (默认为`CCW`)，RiRoIAlignRotated (默认为`CCW`)。
+在MMCV中可以设置旋转方向的算子有：
+- box_iou_rotated (默认为`CW`)
+- nms_rotated (默认为`CW`)
+- RoIAlignRotated (默认为`CCW`)
+- RiRoIAlignRotated (默认为`CCW`)。
 
 ```{note}
-在MMRotate中均使用`CW`。
+在MMRotate中，旋转框的旋转方向均为`CW`。
 ```
 
 ### 旋转框定义法
-由于 `theta` 定义范围的不同，在旋转目标检测中逐渐衍生出如下3种不同的旋转框定义法：
-- {math}`D_{oc^{\prime}}` : OpenCV 定义法，`angle∈(0, 90°]`，`theta∈(0, pi / 2]`，与 x 正半轴成正锐角的矩形边为 height。
-该定义法源于OpenCV中的`cv2.minAreaRect`函数，其返回值为`(0, 90°]`。
+由于 `theta` 定义范围的不同，在旋转目标检测中逐渐派生出如下3种旋转框定义法：
+- {math}`D_{oc^{\prime}}` : OpenCV 定义法，`angle∈(0, 90°]`，`theta∈(0, pi / 2]`，
+height 与 x 正半轴之间的夹角为正的锐角。该定义法源于OpenCV中的`cv2.minAreaRect`函数，
+其返回值为`(0, 90°]`。
 - {math}`D_{le135}` : 长边135°定义法，`angle∈[-45°, 135°)`，`theta∈[-pi / 4, 3 * pi / 4)` 并且 `height > width`。 
 - {math}`D_{le90}` : 长边90°定义法，`angle∈[-90°, 90°)`，`theta∈[-pi / 2, pi / 2)` 并且 `height > width`。
 
@@ -177,7 +182,7 @@ MMRotate 包括四个部分, `datasets`, `models`, `core` and `apis`.
 
 - `models` 包括模型和损失函数。
 
-- `core` 为模型训练和评估提供工具以及角度转换函数。
+- `core` 为模型训练和评估提供工具。
 
 - `apis` 为模型训练、测试和推理提供高级API。
 
