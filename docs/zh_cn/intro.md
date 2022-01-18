@@ -22,7 +22,7 @@
 单位为`rad`。当旋转的角度为90°的倍数时，旋转框退化为水平框。标注软件导出的旋转框标注通常采用多
 边形定义法`(xr_i, yr_i)` (i = 1, 2, 3, 4)，在训练时需要转换为旋转框定义法。
 
-```{note} 注意：
+```{note}
 在 MMRotate 中，角度参数的单位均为弧度。
 ```
 
@@ -85,29 +85,29 @@ y (-pi/2 rad)
 
 CCW 旋转矩阵
 ```{math}
-\\begin{pmatrix}
-\\cos\\alpha & -\\sin\\alpha \\\\
-\\sin\\alpha & \\cos\\alpha
-\\end{pmatrix}
+\begin{pmatrix}
+\cos\alpha & -\sin\alpha \\
+\sin\alpha & \cos\alpha
+\end{pmatrix}
 ```
 
 CCW 旋转变换
 ```{math}
 P_A=
-\\begin{pmatrix} x_A \\\\ y_A\\end{pmatrix}
+\begin{pmatrix} x_A \\ y_A\end{pmatrix}
 =
-\\begin{pmatrix} x_{center} \\\\ y_{center}\\end{pmatrix} +
-\\begin{pmatrix}\\cos\\alpha & \\sin\\alpha \\\\
--\\sin\\alpha & \\cos\\alpha\\end{pmatrix}
-\\begin{pmatrix} -0.5w \\\\ -0.5h\\end{pmatrix} \\\\
+\begin{pmatrix} x_{center} \\ y_{center}\end{pmatrix} +
+\begin{pmatrix}\cos\alpha & \sin\\alpha \\
+-\sin\alpha & \cos\alpha\end{pmatrix}
+\begin{pmatrix} -0.5w \\ -0.5h\end{pmatrix} \\
 =
-\\begin{pmatrix} x_{center}-0.5w\\cos\\alpha-0.5h\\sin\\alpha
-\\\\
-y_{center}+0.5w\\sin\\alpha-0.5h\\cos\\alpha\\end{pmatrix}
+\begin{pmatrix} x_{center}-0.5w\cos\alpha-0.5h\sin\alpha
+\\
+y_{center}+0.5w\sin\alpha-0.5h\cos\alpha\end{pmatrix}
 ```
 
-```{note} 注意：
-在MMRotate中均使用顺时针（CW）旋转。在MMCV中可以设置旋转方向的算子有：box_iou_rotated (默认为`CW`)，nms_rotated (默认为`CW`)，RoIAlignRotated (默认为`CCW`)，RiRoIAlignRotated (默认为`CCW`)。
+```{note}
+在MMRotate中均使用`CW`旋转。在MMCV中可以设置旋转方向的算子有：box_iou_rotated (默认为`CW`)，nms_rotated (默认为`CW`)，RoIAlignRotated (默认为`CCW`)，RiRoIAlignRotated (默认为`CCW`)。
 ```
 
 ### 旋转框定义法
