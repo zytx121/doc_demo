@@ -14,6 +14,7 @@ import os
 import sys
 
 import pytorch_sphinx_theme
+from sphinx.builders.html import StandaloneHTMLBuilder
 
 sys.path.insert(0, os.path.abspath('../..'))
 
