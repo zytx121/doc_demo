@@ -212,7 +212,7 @@ useful data augmentation transforms in `pipelines` for pre-processing image.
 
 - `models` contains models and loss functions.
 
-- `core` provides evaluation tools for model training and evaluation.
+- `core` provides evaluation tools for model training and evaluation. 
 
 - `apis` provides high-level APIs for models training, testing, and inference.
 
@@ -226,7 +226,7 @@ Here is a detailed step-by-step guide to learn more about MMRotate:
 
 3. Refer to the below tutorials to dive deeper:
 
-- [Config](detection/customize_config.md)
-- [Customize Dataset](detection/customize_dataset.md)
-- [Customize Model](detection/customize_models.md)
-- [Customize Runtime](detection/customize_runtime.md)
+- [Config](tutorials/customize_config.md)
+- [Customize Dataset](tutorials/customize_dataset.md)
+- [Customize Model](tutorials/customize_models.md)
+- [Customize Runtime](tutorials/customize_runtime.md)
