@@ -135,8 +135,8 @@ D_{oc}\left( h_{oc},w_{oc},\theta _{oc} \right) =\begin{cases}
 \end{cases}
 \\
 D_{oc}^{old}\left( h_{oc}^{old},w_{oc}^{old},\theta _{oc}^{old} \right) =\begin{cases}
-	D_{oc}\left( w_{oc},h_{oc},\theta _{oc}-\pi /2 \right) \text{，}\theta _{oc}^{old}\in \left( 0,\pi /2 \right)\\
-	D_{oc}\left( h_{oc},w_{oc},\theta _{oc}-\pi \right) \text{，}\theta _{oc}^{old}=\pi /2\\
+	D_{oc}\left( w_{oc},h_{oc},\theta _{oc}-\pi /2 \right) \text{，}\theta _{oc}\in \left( 0,\pi /2 \right)\\
+	D_{oc}\left( h_{oc},w_{oc},\theta _{oc}-\pi \right) \text{，}\theta _{oc}=\pi /2\\
 \end{cases}
 ```
 如下图所示:
