@@ -22,7 +22,9 @@
 单位为`rad`。当旋转的角度为90°的倍数时，旋转框退化为水平框。标注软件导出的旋转框标注通常采用多
 边形定义法`(xr_i, yr_i)` (i = 1, 2, 3, 4)，在训练时需要转换为旋转框定义法。
 
-*注：在 MMRotate 中，角度参数的单位均为弧度。*
+```{note}
+在 MMRotate 中，角度参数的单位均为弧度。
+```
 
 实际上，旋转框既可以由水平框绕在中心点顺时针旋转得到，也可以由水平框绕在中心点逆时针旋转得到。
 旋转方向和坐标系的选择密切相关。图像空间采用右手坐标系`(y，x)`，其中 y 是`上->下`，x 是`左->右`。
@@ -71,10 +73,10 @@ y (-pi/2 rad)
 xr_i = sin(theta) * (y_i - y_c) + cos(theta) * (x_i - x_c) + x_c
 yr_i = cos(theta) * (y_i - y_c) - sin(theta) * (x_i - x_c) + y_c
 ```
-
-*注：在MMRotate中均使用顺时针坐旋转。在MMCV中可以设置旋转方向的算子有：box_iou_rotated (默认为`CW`)，nms_rotated (默认为`CW`)，
+```{note}
+在MMRotate中均使用顺时针（CW）旋转。在MMCV中可以设置旋转方向的算子有：box_iou_rotated (默认为`CW`)，nms_rotated (默认为`CW`)，
 RoIAlignRotated (默认为`CCW`)，RiRoIAlignRotated (默认为`CCW`)。*
-
+```
 
 ### 旋转框定义法
 由于 `theta` 定义范围的不同，在旋转目标检测中逐渐衍生出如下3种不同的旋转框定义法：
@@ -86,10 +88,9 @@ RoIAlignRotated (默认为`CCW`)，RiRoIAlignRotated (默认为`CCW`)。*
 - ***D<sub>le90</sub>*** : 长边90°定义法，`theta∈[-pi / 2, pi / 2)` 并且 `w > h`。
 
 
-
 ### 评估
 评估 mAP 的代码中涉及 IoU 的计算，可以直接计算旋转框 IoU，也可以将旋转框转换为多边形，然后
-计算多边形 IoU (DOTA在线评估使用的是计算多边形 IoU).
+计算多边形 IoU (DOTA在线评估使用的是计算多边形 IoU)。
 
 
 ## 什么是 MMRotate
@@ -102,8 +103,7 @@ MMRotate 是一个为旋转目标检测方法提供统一训练和评估框架�
 
 MMRotate 包括四个部分, `datasets`, `models`, `core` and `apis`.
 
-- `datasets` 用于数据加载和数据增强。 在这部分,我们支持了各种旋转目标检测数据集，有用的数据
-增强预处理，以及灵活的数据采样。
+- `datasets` 用于数据加载和数据增强。 在这部分,我们支持了各种旋转目标检测数据集和数据增强预处理。
 
 - `models` 包括模型和损失函数。
 
