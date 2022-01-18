@@ -47,25 +47,25 @@ y (pi/2 rad)
 
 CW 旋转矩阵
 ```{math}
-\\begin{pmatrix}
-\\cos\\alpha & -\\sin\\alpha \\\\
-\\sin\\alpha & \\cos\\alpha
-\\end{pmatrix}
+\begin{pmatrix}
+\cos\alpha & -\sin\alpha \\
+\sin\alpha & \cos\alpha
+\end{pmatrix}
 ```
 
 CW 旋转变换
 ```{math}
 P_A=
-\\begin{pmatrix} x_A \\\\ y_A\\end{pmatrix}
+\begin{pmatrix} x_A \\ y_A\end{pmatrix}
 =
-\\begin{pmatrix} x_{center} \\\\ y_{center}\\end{pmatrix} +
-\\begin{pmatrix}\\cos\\alpha & -\\sin\\alpha \\\\
-\\sin\\alpha & \\cos\\alpha\\end{pmatrix}
-\\begin{pmatrix} -0.5w \\\\ -0.5h\\end{pmatrix} \\\\
+\begin{pmatrix} x_{center} \\ y_{center}\end{pmatrix} +
+\begin{pmatrix}\cos\alpha & -\sin\alpha \\
+\sin\alpha & \cos\alpha\end{pmatrix}
+\begin{pmatrix} -0.5w \\ -0.5h\end{pmatrix} \\
 =
-\\begin{pmatrix} x_{center}-0.5w\\cos\\alpha+0.5h\\sin\\alpha
-\\\\
-y_{center}-0.5w\\sin\\alpha-0.5h\\cos\\alpha\\end{pmatrix}
+\begin{pmatrix} x_{center}-0.5w\cos\alpha+0.5h\sin\alpha
+\\
+y_{center}-0.5w\sin\alpha-0.5h\cos\alpha\end{pmatrix}
 ```
 
 - 逆时针（CCW）旋转
@@ -86,8 +86,8 @@ y (-pi/2 rad)
 CCW 旋转矩阵
 ```{math}
 \begin{pmatrix}
-\cos\alpha & -\sin\alpha \\
-\sin\alpha & \cos\alpha
+\cos\alpha & \sin\alpha \\
+-\sin\alpha & \cos\alpha
 \end{pmatrix}
 ```
 
@@ -97,7 +97,7 @@ P_A=
 \begin{pmatrix} x_A \\ y_A\end{pmatrix}
 =
 \begin{pmatrix} x_{center} \\ y_{center}\end{pmatrix} +
-\begin{pmatrix}\cos\alpha & \sin\\alpha \\
+\begin{pmatrix}\cos\alpha & \sin\alpha \\
 -\sin\alpha & \cos\alpha\end{pmatrix}
 \begin{pmatrix} -0.5w \\ -0.5h\end{pmatrix} \\
 =
