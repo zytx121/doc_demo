@@ -14,7 +14,6 @@ import os
 import sys
 
 import pytorch_sphinx_theme
-from sphinx.builders.html import StandaloneHTMLBuilder
 
 sys.path.insert(0, os.path.abspath('../..'))
 
@@ -56,10 +55,10 @@ templates_path = ['_templates']
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
-source_suffix = {
-    '.rst': 'restructuredtext',
-    '.md': 'markdown',
-}
+# source_suffix = {
+#     '.rst': 'restructuredtext',
+#     '.md': 'markdown',
+# }
 
 # The master toctree document.
 master_doc = 'index'
@@ -113,12 +112,6 @@ html_theme_options = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 html_css_files = ['css/readthedocs.css']
-
-
-# set priority when building html
-StandaloneHTMLBuilder.supported_image_types = [
-    'image/svg+xml', 'image/gif', 'image/png', 'image/jpeg'
-]
 
 # -- Extension configuration -------------------------------------------------
 # Ignore >>> when copying code
