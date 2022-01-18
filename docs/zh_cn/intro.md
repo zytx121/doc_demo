@@ -121,6 +121,12 @@ y_{center}+0.5w\sin\alpha-0.5h\cos\alpha\end{pmatrix}
 - ***D<sub>le135</sub>*** : 长边135°定义法，`angle∈(-45°, 135°]`，`theta∈[-pi / 4, 3 * pi / 4)` 并且 `w > h`。 
 - ***D<sub>le90</sub>*** : 长边90°定义法，`angle∈(-90°, 90°]`，`theta∈[-pi / 2, pi / 2)` 并且 `w > h`。
 
+三种表示法的转换关系如下：
+```{math}
+
+```
+
+
 ```{note}
 MMRotate同时支持上述三种旋转框定义法，可以通过配置文件灵活切换。
 ```
@@ -130,13 +136,13 @@ MMRotate同时支持上述三种旋转框定义法，可以通过配置文件灵
 OpenCV定义法记作 {math}`D_{oc}^{old}`。 两者的转换关系如下：
 ```{math}
 D_{oc}\left( h_{oc},w_{oc},\theta _{oc} \right) =\begin{cases}
-	D_{oc}^{old}\left( w_{oc}^{old},h_{oc}^{old},\theta _{oc}^{old}+\pi /2 \right) \text{，}\theta _{oc}^{old}\in \left( -\pi /2,0 \right)\\
-	D_{oc}^{old}\left( h_{oc}^{old},w_{oc}^{old},\theta _{oc}^{old}+\pi \right) \text{，}\theta _{oc}^{old}=-\pi /2\\
+	D_{oc}^{old}\left( w_{oc}^{old},h_{oc}^{old},\theta _{oc}^{old}+\pi /2 \right),\theta _{oc}^{old}\in \left( -\pi /2,0 \right)\\
+	D_{oc}^{old}\left( h_{oc}^{old},w_{oc}^{old},\theta _{oc}^{old}+\pi \right),\theta _{oc}^{old}=-\pi /2\\
 \end{cases}
 \\
 D_{oc}^{old}\left( h_{oc}^{old},w_{oc}^{old},\theta _{oc}^{old} \right) =\begin{cases}
-	D_{oc}\left( w_{oc},h_{oc},\theta _{oc}-\pi /2 \right) \text{，}\theta _{oc}\in \left( 0,\pi /2 \right)\\
-	D_{oc}\left( h_{oc},w_{oc},\theta _{oc}-\pi \right) \text{，}\theta _{oc}=\pi /2\\
+	D_{oc}\left( w_{oc},h_{oc},\theta _{oc}-\pi /2 \right),\theta _{oc}^{old}\in \left( 0,\pi /2 \right)\\
+	D_{oc}\left( h_{oc},w_{oc},\theta _{oc}-\pi \right),\theta _{oc}^{old}=\pi /2\\
 \end{cases}
 ```
 如下图所示:
