@@ -114,6 +114,12 @@ html_theme_options = {
 html_static_path = ['_static']
 html_css_files = ['css/readthedocs.css']
 
+
+# set priority when building html
+StandaloneHTMLBuilder.supported_image_types = [
+    'image/svg+xml', 'image/gif', 'image/png', 'image/jpeg'
+]
+
 # -- Extension configuration -------------------------------------------------
 # Ignore >>> when copying code
 copybutton_prompt_text = r'>>> |\.\.\. '
