@@ -186,6 +186,17 @@ MMRotate 包括四个部分, `datasets`, `models`, `core` and `apis`.
 
 - `apis` 为模型训练、测试和推理提供高级API。
 
+MMRotate 的模块设计如下图所示：
+<div align=center>
+<img src="https://raw.githubusercontent.com/zytx121/image-host/main/imgs/framework.png" width=100%/>
+</div>
+
+其中由于旋转框定义法不同而需要注意的地方有如下几个：
+- 读取标注
+- 数据增强
+- 指派样本
+- 评估指标
+
 ## 如何使用教程
 
 下面是 MMRotate 详细的分步指南:

@@ -216,6 +216,19 @@ useful data augmentation transforms in `pipelines` for pre-processing image.
 
 - `apis` provides high-level APIs for models training, testing, and inference.
 
+The module design of MMRotate is as follows:
+<div align=center>
+<img src="https://raw.githubusercontent.com/zytx121/image-host/main/imgs/framework.png" width=100%/>
+</div>
+
+
+The following points need to be noted due to different definitions of rotated box:
+- Loading annotations
+- Data augmentation
+- Assigning samples
+- Evaluation
+
+
 ## How to Use this Guide
 
 Here is a detailed step-by-step guide to learn more about MMRotate:
