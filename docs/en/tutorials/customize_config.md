@@ -46,7 +46,7 @@ We follow the below style to name config files. Contributors are advised to foll
 - `[misc]`: miscellaneous setting/plugins of model, e.g. `dconv`, `gcb`, `attention`, `albu`, `mstrain`.
 - `[gpu x batch_per_gpu]`: GPUs and samples per GPU, `1xb2` is used by default.
 - `{dataset}`: dataset like `dota`.
-- `{angle version}`: like `v1`, `v2` or `v3`.
+- `{angle version}`: like `oc`, `le135` or `le90`.
 
 ## An example of RotatedRetinaNet
 
@@ -54,7 +54,7 @@ To help the users have a basic idea of a complete config and the modules in a mo
 we make brief comments on the config of RotatedRetinaNet using ResNet50 and FPN as the following. For more
 detailed usage and the corresponding alternative for each modules, please refer to the API documentation.
 ```python
-angle_version = 'v1'  # The angle version
+angle_version = 'oc'  # The angle version
 model = dict(
     type='RotatedRetinaNet',  # The name of detector
     backbone=dict(  # The config of backbone
@@ -83,7 +83,7 @@ model = dict(
         in_channels=256,  # Input channels for bbox head
         stacked_convs=4,  # Number of stacking convs of the head
         feat_channels=256,  # Number of hidden channels
-        assign_by_circumhbbox='v1',  # The angle version of obb2hbb
+        assign_by_circumhbbox='oc',  # The angle version of obb2hbb
         anchor_generator=dict(  # The config of anchor generator
             type='RotatedAnchorGenerator',  # The type of anchor generator
             octave_base_scale=4,  # The base scale of octave.
@@ -92,7 +92,7 @@ model = dict(
             strides=[8, 16, 32, 64, 128]),  # The strides of the anchor generator. This is consistent with the FPN feature strides.
         bbox_coder=dict(  # Config of box coder to encode and decode the boxes during training and testing
             type='DeltaXYWHAOBBoxCoder',  # Type of box coder.
-            angle_range='v1',  # The angle version of box coder.
+            angle_range='oc',  # The angle version of box coder.
             target_means=(0.0, 0.0, 0.0, 0.0, 0.0),  # The target means used to encode and decode boxes
             target_stds=(1.0, 1.0, 1.0, 1.0, 1.0)),  # The standard variance used to encode and decode boxes
         loss_cls=dict(  # Config of loss function for the classification branch
@@ -135,7 +135,7 @@ train_pipeline = [  # Training pipeline
          img_scale=(1024, 1024)),  # The largest scale of image
     dict(type='RRandomFlip',  # Augmentation pipeline that flip the images and their annotations
          flip_ratio=0.5,  # The ratio or probability to flip
-         version='v1'),  # The angle version
+         version='oc'),  # The angle version
     dict(
         type='Normalize',  # Augmentation pipeline that normalize the input images
         mean=[123.675, 116.28, 103.53],  # These keys are the same of img_norm_cfg since the
@@ -180,7 +180,7 @@ data = dict(
             dict(type='LoadImageFromFile'),
             dict(type='LoadAnnotations', with_bbox=True),
             dict(type='RResize', img_scale=(1024, 1024)),
-            dict(type='RRandomFlip', flip_ratio=0.5, version='v1'),
+            dict(type='RRandomFlip', flip_ratio=0.5, version='oc'),
             dict(
                 type='Normalize',
                 mean=[123.675, 116.28, 103.53],
@@ -190,7 +190,7 @@ data = dict(
             dict(type='DefaultFormatBundle'),
             dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
         ],
-        version='v1'),
+        version='oc'),
     val=dict(  # Validation dataset config
         type='DOTADataset',
         ann_file=
@@ -215,7 +215,7 @@ data = dict(
                     dict(type='Collect', keys=['img'])
                 ])
         ],
-        version='v1'),
+        version='oc'),
     test=dict(  # Test dataset config, modify the ann_file for test-dev/test submission
         type='DOTADataset',
         ann_file=
@@ -240,7 +240,7 @@ data = dict(
                     dict(type='Collect', keys=['img'])
                 ])
         ],
-        version='v1'))
+        version='oc'))
 evaluation = dict(  # The config to build the evaluation hook
     interval=12,  # Evaluation interval
     metric='mAP')  # Metrics used during evaluation
@@ -275,7 +275,7 @@ log_level = 'INFO'  # The level of logging.
 load_from = None  # load models as a pre-trained model from a given path. This will not resume training.
 resume_from = None  # Resume checkpoints from a given path, the training will be resumed from the epoch when the checkpoint's is saved.
 workflow = [('train', 1)]  # Workflow for runner. [('train', 1)] means there is only one workflow and the workflow named 'train' is executed once. The workflow trains the model by 12 epochs according to the total_epochs.
-work_dir = './work_dirs/rotated_retinanet_hbb_r50_fpn_1x_dota_v1'  # Directory to save the model checkpoints and logs for the current experiments.
+work_dir = './work_dirs/rotated_retinanet_hbb_r50_fpn_1x_dota_oc'  # Directory to save the model checkpoints and logs for the current experiments.
 ```
 
 ## FAQ
@@ -287,10 +287,10 @@ It's worth noting that when modifying intermediate variables in the children con
 For example, we would like to use offline multi scale strategy to train a RoI-Trans. `train_pipeline` are intermediate variable we would like modify.
 
 ```python
-_base_ = ['./roi_trans_r50_fpn_1x_dota_v3.py']
+_base_ = ['./roi_trans_r50_fpn_1x_dota_le90.py']
 
 data_root = '../datasets/split_ms_dota1_0/'
-angle_version = 'v3'
+angle_version = 'le90'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 train_pipeline = [
@@ -331,7 +331,7 @@ We first define the new `train_pipeline`/`test_pipeline` and pass them into `dat
 Similarly, if we would like to switch from `SyncBN` to `BN` or `MMSyncBN`, we need to substitute every `norm_cfg` in the config.
 
 ```python
-_base_ = './roi_trans_r50_fpn_1x_dota_v3.py'
+_base_ = './roi_trans_r50_fpn_1x_dota_le90.py'
 norm_cfg = dict(type='BN', requires_grad=True)
 model = dict(
     backbone=dict(norm_cfg=norm_cfg),

@@ -41,7 +41,7 @@ In `configs/my_custom_config.py`:
 ```python
 
 # the new config inherits the base configs to highlight the necessary modification
-_base_ = './rotated_retinanet_hbb_r50_fpn_1x_dota_v1'
+_base_ = './rotated_retinanet_hbb_r50_fpn_1x_dota_oc'
 
 # 1. dataset settings
 dataset_type = 'DOTADataset'
