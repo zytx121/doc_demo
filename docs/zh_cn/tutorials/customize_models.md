@@ -21,10 +21,10 @@ Create a new file `mmrotate/models/backbones/mobilenet.py`.
 ```python
 import torch.nn as nn
 
-from mmdet.models.builder import BACKBONES
+from mmrotate.models.builder import ROTATED_BACKBONES
 
 
-@BACKBONES.register_module()
+@ROTATED_BACKBONES.register_module()
 class MobileNet(nn.Module):
 
     def __init__(self, arg1, arg2):
@@ -71,9 +71,9 @@ model = dict(
 Create a new file `mmrotate/models/necks/pafpn.py`.
 
 ```python
-from mmrotate.models.builder import NECKS
+from mmrotate.models.builder import ROTATED_NECKS
 
-@NECKS.register_module()
+@ROTATED_NECKS.register_module()
 class PAFPN(nn.Module):
 
     def __init__(self,
@@ -127,10 +127,10 @@ Double Head R-CNN implements a new bbox head for object detection.
 To implement a bbox head, basically we need to implement three functions of the new module as the following.
 
 ```python
-from mmdet.models.builder import HEADS
+from mmrotate.models.builder import ROTATED_HEADS
 from mmrotate.models.roi_heads.bbox_heads.bbox_head import BBoxHead
 
-@HEADS.register_module()
+@ROTATED_HEADS.register_module()
 class DoubleConvFCBBoxHead(BBoxHead):
     r"""Bbox head used in Double-Head R-CNN
 
@@ -165,12 +165,12 @@ Second, implement a new RoI Head if it is necessary. We plan to inherit the new 
 import torch
 
 from mmdet.core import bbox2result, bbox2roi, build_assigner, build_sampler
-from mmrotate.models.builder import HEADS, build_head, build_roi_extractor
+from mmrotate.models.builder import ROTATED_HEADS, build_head, build_roi_extractor
 from mmrotate.models.roi_heads.base_roi_head import BaseRoIHead
 from mmrotate.models.roi_heads.test_mixins import BBoxTestMixin, MaskTestMixin
 
 
-@HEADS.register_module()
+@ROTATED_HEADS.register_module()
 class StandardRoIHead(BaseRoIHead, BBoxTestMixin, MaskTestMixin):
     """Simplest base roi head including one bbox head and one mask head.
     """
@@ -210,11 +210,11 @@ Double Head's modification is mainly in the bbox_forward logic, and it inherits 
 In the `mmrotate/models/roi_heads/double_roi_head.py`, we implement the new RoI Head as the following:
 
 ```python
-from mmrotate.models.builder import HEADS
+from mmrotate.models.builder import ROTATED_HEADS
 from mmrotate.models.roi_heads.standard_roi_head import StandardRoIHead
 
 
-@HEADS.register_module()
+@ROTATED_HEADS.register_module()
 class DoubleHeadRoIHead(StandardRoIHead):
     """RoI head for Double Head RCNN
 
@@ -267,7 +267,7 @@ The decorator `weighted_loss` enable the loss to be weighted for each element.
 import torch
 import torch.nn as nn
 
-from mmdet.models.builder import LOSSES
+from mmrotate.models.builder import ROTATED_LOSSES
 from mmdet.models.losses.utils import weighted_loss
 
 @weighted_loss
@@ -276,7 +276,7 @@ def my_loss(pred, target):
     loss = torch.abs(pred - target)
     return loss
 
-@LOSSES.register_module()
+@ROTATED_LOSSES.register_module()
 class MyLoss(nn.Module):
 
     def __init__(self, reduction='mean', loss_weight=1.0):
