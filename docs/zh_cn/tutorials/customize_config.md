@@ -48,7 +48,7 @@ We follow the below style to name config files. Contributors are advised to foll
 - `{dataset}`: dataset like `dota`.
 - `{angle version}`: like `oc`, `le135` or `le90`.
 
-## An example of RotatedetinaNet
+## An example of RotatedRetinaNet
 
 To help the users have a basic idea of a complete config and the modules in a modern detection system,
 we make brief comments on the config of RotatedRetinaNet using ResNet50 and FPN as the following. For more
@@ -93,6 +93,9 @@ model = dict(
         bbox_coder=dict(  # Config of box coder to encode and decode the boxes during training and testing
             type='DeltaXYWHAOBBoxCoder',  # Type of box coder.
             angle_range='oc',  # The angle version of box coder.
+            norm_factor=None,  # The norm factor of box coder.
+            edge_swap=False,  # The edge swap flag of box coder.
+            proj_xy=False,  # The project flag of box coder.
             target_means=(0.0, 0.0, 0.0, 0.0, 0.0),  # The target means used to encode and decode boxes
             target_stds=(1.0, 1.0, 1.0, 1.0, 1.0)),  # The standard variance used to encode and decode boxes
         loss_cls=dict(  # Config of loss function for the classification branch
