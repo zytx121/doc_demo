@@ -1,19 +1,19 @@
 ## Benchmark and Model Zoo
 
-- [Rotated RetinaNet-OBB/HBB](.../configs/rotated_retinanet/README.md) (ICCV'2017)
-- [Rotated FasterRCNN-OBB](.../configs/rotated_faster_rcnn/README.md) (TPAMI'2017)
-- [Rotated RepPoints-OBB](.../configs/rotated_reppoints/README.md) (ICCV'2019)
-- [RoI Transformer](.../configs/roi_trans/README.md) (CVPR'2019)
-- [Gliding Vertex](.../configs/gliding_vertex/README.md) (TPAMI'2020)
-- [R<sup>3</sup>Det](.../configs/r3det/README.md) (AAAI'2021)
-- [S<sup>2</sup>A-Net](.../configs/s2anet/README.md) (TGRS'2021)
-- [ReDet](.../configs/redet/README.md) (CVPR'2021)
-- [Beyond Bounding-Box](.../configs/cfa/README.md) (CVPR'2021)
-- [Oriented R-CNN](.../configs/oriented_rcnn/README.md) (ICCV'2021)
-- [GWD](.../configs/gwd/README.md) (ICML'2021)
-- [KLD](.../configs/kld/README.md) (NeurIPS'2021)
-- [KFIoU](.../configs/kfiou/README.md) (stay tuned)
-- [G-Rep](.../configs/g_reppoints/README.md) (stay tuned)
+- [Rotated RetinaNet-OBB/HBB](https://github.com/zytx121/mmrotate/tree/main/configs/rotated_retinanet/README.md) (ICCV'2017)
+- [Rotated FasterRCNN-OBB](https://github.com/zytx121/mmrotate/tree/main/configs/rotated_faster_rcnn/README.md) (TPAMI'2017)
+- [Rotated RepPoints-OBB](https://github.com/zytx121/mmrotate/tree/main/configs/rotated_reppoints/README.md) (ICCV'2019)
+- [RoI Transformer](https://github.com/zytx121/mmrotate/tree/main/configs/roi_trans/README.md) (CVPR'2019)
+- [Gliding Vertex](https://github.com/zytx121/mmrotate/tree/main/configs/gliding_vertex/README.md) (TPAMI'2020)
+- [R<sup>3</sup>Det](https://github.com/zytx121/mmrotate/tree/main/configs/r3det/README.md) (AAAI'2021)
+- [S<sup>2</sup>A-Net](https://github.com/zytx121/mmrotate/tree/main/configs/s2anet/README.md) (TGRS'2021)
+- [ReDet](https://github.com/zytx121/mmrotate/tree/main/configs/redet/README.md) (CVPR'2021)
+- [Beyond Bounding-Box](https://github.com/zytx121/mmrotate/tree/main/configs/cfa/README.md) (CVPR'2021)
+- [Oriented R-CNN](https://github.com/zytx121/mmrotate/tree/main/configs/oriented_rcnn/README.md) (ICCV'2021)
+- [GWD](https://github.com/zytx121/mmrotate/tree/main/configs/gwd/README.md) (ICML'2021)
+- [KLD](https://github.com/zytx121/mmrotate/tree/main/configs/kld/README.md) (NeurIPS'2021)
+- [KFIoU](https://github.com/zytx121/mmrotate/tree/main/configs/kfiou/README.md) (stay tuned)
+- [G-Rep](https://github.com/zytx121/mmrotate/tree/main/configs/g_reppoints/README.md) (stay tuned)
 
 
 | Model | Backbone | Lr schd | MS | RR | Angle | box AP | Official | Download |

@@ -112,7 +112,7 @@ c. Some dependencies are optional. Simply running `pip install -v -e .` will
 
 ### Another option: Docker Image
 
-We provide a [Dockerfile](.../docker/Dockerfile) to build an image. Ensure that you are using [docker version](https://docs.docker.com/engine/install/) >=19.03.
+We provide a [Dockerfile](https://github.com/zytx121/mmrotate/tree/main/docker/Dockerfile) to build an image. Ensure that you are using [docker version](https://docs.docker.com/engine/install/) >=19.03.
 
 ```shell
 # build an image with PyTorch 1.6, CUDA 10.1
@@ -153,8 +153,8 @@ pip install -v -e .  # or "python setup.py develop"
 
 To verify whether MMRotate is installed correctly, we can run the demo code and inference a demo image.
 
-Please refer to [demo](.../demo)
+Please refer to [demo](https://github.com/zytx121/mmrotate/tree/main/demo)
  for more details. The demo code is supposed to run successfully upon you finish the installation.
 
 ## Dataset Preparation
-Please refer to [data preparation](.../tools/data) for dataset preparation.
+Please refer to [data preparation](https://github.com/zytx121/mmrotate/tree/main/tools/data) for dataset preparation.
