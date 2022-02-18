@@ -5,7 +5,7 @@
 - PyTorch 1.6+
 - CUDA 9.2+
 - GCC 5+
-- [mmcv](https://mmcv.readthedocs.io/en/latest/#installation) 1.4.4+
+- [mmcv](https://mmcv.readthedocs.io/en/latest/#installation) 1.4.5+
 - [mmdet](https://mmdetection.readthedocs.io/en/latest/#installation) 2.19.0+
 
 
@@ -13,7 +13,7 @@ MMRotate 和 MMCV, MMDet 版本兼容性如下所示，需要安装正确的版�
 
 | MMRotate 版本   |    MMCV 版本   |      MMDetection 版本     |
 |:-------------------:|:-----------------:|:---------------------------------:|
-| master              | mmcv-full>=1.4.4 |      mmdet >= 2.19.0               |
+| master              | mmcv-full>=1.4.5 |      mmdet >= 2.19.0               |
 
 **注意：**如果已经安装了 mmcv，首先需要使用 `pip uninstall mmcv` 卸载已安装的 mmcv，如果同时安装了 mmcv 和 mmcv-full，将会报 `ModuleNotFoundError` 错误。
 
@@ -118,7 +118,7 @@ MIM 能够自动地安装 OpenMMLab 的项目以及对应的依赖包。
 
 ### 另一种选择： Docker 镜像
 
-我们提供了 [Dockerfile](https://github.com/zytx121/mmrotate/tree/main/docker/Dockerfile) to build an image. Ensure that you are using [docker version](https://docs.docker.com/engine/install/) >=19.03.
+我们提供了 [Dockerfile](https://github.com/open-mmlab/mmrotate/tree/main/docker/Dockerfile) to build an image. Ensure that you are using [docker version](https://docs.docker.com/engine/install/) >=19.03.
 
 ```shell
 # 基于 PyTorch 1.6, CUDA 10.1 生成镜像
@@ -148,7 +148,7 @@ pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu101/torch1.7
 pip install mmdet
 
 # 安装 mmrotate
-git clone https://github.com/zytx121/mmrotate.git
+git clone https://github.com/open-mmlab/mmrotate.git
 cd mmrotate
 pip install -r requirements/build.txt
 pip install -v -e .  # or "python setup.py develop"
@@ -159,8 +159,8 @@ pip install -v -e .  # or "python setup.py develop"
 
 为了验证是否正确安装了 MMRotate 和所需的环境，我们可以运行示例的 Python 代码在示例图像进行推理：
 
-具体的细节可以参考 [demo](https://github.com/zytx121/mmrotate/tree/main/demo)。
+具体的细节可以参考 [demo](https://github.com/open-mmlab/mmrotate/tree/main/demo)。
 如果成功安装 MMRotate，则上面的代码可以完整地运行。
 
 ## 准备数据集
-具体的细节可以参考 [准备数据](https://github.com/zytx121/mmrotate/tree/main/tools/data) 下载并组织数据集。
+具体的细节可以参考 [准备数据](https://github.com/open-mmlab/mmrotate/tree/main/tools/data) 下载并组织数据集。

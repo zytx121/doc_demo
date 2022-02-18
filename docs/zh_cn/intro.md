@@ -123,7 +123,7 @@ y_{center}+0.5w\sin\alpha-0.5h\cos\alpha\end{pmatrix}
 - {math}`D_{oc^{\prime}}` : OpenCV 定义法，`angle∈(0, 90°]`，`theta∈(0, pi / 2]`，
 height 与 x 正半轴之间的夹角为正的锐角。该定义法源于OpenCV中的`cv2.minAreaRect`函数，
 其返回值为`(0, 90°]`。
-- {math}`D_{le135}` : 长边135°定义法，`angle∈[-45°, 135°)`，`theta∈[-pi / 4, 3 * pi / 4)` 并且 `height > width`。 
+- {math}`D_{le135}` : 长边135°定义法，`angle∈[-45°, 135°)`，`theta∈[-pi / 4, 3 * pi / 4)` 并且 `height > width`。
 - {math}`D_{le90}` : 长边90°定义法，`angle∈[-90°, 90°)`，`theta∈[-pi / 2, pi / 2)` 并且 `height > width`。
 
 <div align=center>
@@ -139,7 +139,7 @@ MMRotate同时支持上述三种旋转框定义法，可以通过配置文件灵
 
 需要注意的是，在4.5.1之前的版本中，`cv2.minAreaRect`的返回值为`[-90°, 0°)`
 （[参考资料](https://github.com/opencv/opencv/issues/19749)）。为了便于区分，
-将老版本的OpenCV定义法记作 {math}`D_{oc}`。 
+将老版本的OpenCV定义法记作 {math}`D_{oc}`。
 - {math}`D_{oc^{\prime}}` : OpenCV 定义法，`opencv>=4.5.1`，`angle∈(0, 90°]`，`theta∈(0, pi / 2]`。
 - {math}`D_{oc}` : 老版的 OpenCV 定义法，`opencv<4.5.1`，`angle∈[-90°, 0°)`，`theta∈[-pi / 2, 0)`。
 <div align=center>

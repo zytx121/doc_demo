@@ -5,7 +5,7 @@
 - PyTorch 1.6+
 - CUDA 9.2+
 - GCC 5+
-- [mmcv](https://mmcv.readthedocs.io/en/latest/get_started/installation.html) 1.4.4+
+- [mmcv](https://mmcv.readthedocs.io/en/latest/get_started/installation.html) 1.4.5+
 - [mmdet](https://mmdetection.readthedocs.io/en/latest/get_started.html#installation) 2.19.0+
 
 
@@ -13,7 +13,7 @@ Compatible MMCV, MMClassification and MMDetection versions are shown as below. P
 
 | MMRotate version   |    MMCV version   |      MMDetection version     |
 |:-------------------:|:-----------------:|:---------------------------------:|
-| master              | mmcv-full>=1.4.4 |      mmdet >= 2.19.0              |
+| master              | mmcv-full>=1.4.5 |      mmdet >= 2.19.0              |
 
 **Note:** You need to run `pip uninstall mmcv` first if you have mmcv installed.
 If mmcv and mmcv-full are both installed, there will be `ModuleNotFoundError`.
@@ -112,7 +112,7 @@ c. Some dependencies are optional. Simply running `pip install -v -e .` will
 
 ### Another option: Docker Image
 
-We provide a [Dockerfile](https://github.com/zytx121/mmrotate/tree/main/docker/Dockerfile) to build an image. Ensure that you are using [docker version](https://docs.docker.com/engine/install/) >=19.03.
+We provide a [Dockerfile](https://github.com/open-mmlab/mmrotate/tree/main/docker/Dockerfile) to build an image. Ensure that you are using [docker version](https://docs.docker.com/engine/install/) >=19.03.
 
 ```shell
 # build an image with PyTorch 1.6, CUDA 10.1
@@ -142,7 +142,7 @@ pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu101/torch1.7
 pip install mmdet
 
 # install mmrotate
-git clone https://github.com/zytx121/mmrotate.git
+git clone https://github.com/open-mmlab/mmrotate.git
 cd mmrotate
 pip install -r requirements/build.txt
 pip install -v -e .  # or "python setup.py develop"
@@ -153,8 +153,8 @@ pip install -v -e .  # or "python setup.py develop"
 
 To verify whether MMRotate is installed correctly, we can run the demo code and inference a demo image.
 
-Please refer to [demo](https://github.com/zytx121/mmrotate/tree/main/demo)
+Please refer to [demo](https://github.com/open-mmlab/mmrotate/tree/main/demo)
  for more details. The demo code is supposed to run successfully upon you finish the installation.
 
 ## Dataset Preparation
-Please refer to [data preparation](https://github.com/zytx121/mmrotate/tree/main/tools/data) for dataset preparation.
+Please refer to [data preparation](https://github.com/open-mmlab/mmrotate/tree/main/tools/data) for dataset preparation.

@@ -37,13 +37,9 @@ def get_version():
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.napoleon',
-    'sphinx.ext.viewcode',
-    'sphinx.ext.autosectionlabel',
-    'sphinx_copybutton',
-    'sphinx_markdown_tables',
-    'myst_parser'
+    'sphinx.ext.autodoc', 'sphinx.ext.napoleon', 'sphinx.ext.viewcode',
+    'sphinx.ext.autosectionlabel', 'sphinx_copybutton',
+    'sphinx_markdown_tables', 'myst_parser'
 ]
 
 autodoc_mock_imports = ['matplotlib', 'mmrotate.version', 'mmcv.ops']
